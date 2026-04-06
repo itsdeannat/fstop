@@ -1,0 +1,13 @@
+{
+  "name": "fstop",
+  "version": "0.0.0",
+  "description": "A sample REST API for Fstop, a fictional photography business platform",
+  "scripts": {
+    "release": "standard-version"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "standard-version": "^9.5.0"
+  }
+}
