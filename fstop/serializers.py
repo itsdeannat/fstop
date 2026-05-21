@@ -11,23 +11,26 @@ class ClientSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     
     client = ClientSerializer(read_only=True) # Nesting the data here
+    client_id = serializers.UUIDField(write_only=True) # So users have to pass the client ID when creating a project
     
     class Meta:
         model = Project
-        fields = ['id', 'project_name', 'project_type', 'client', 'created_at']
+        fields = ['id', 'project_name', 'project_type', 'client', 'client_id', 'created_at']
         
 class BookingSerializer(serializers.ModelSerializer):
     
     project = ProjectSerializer(read_only=True)
+    project_id = serializers.UUIDField(write_only=True)
     
     class Meta:
         model = Booking
-        fields = ['id', 'project', 'date', 'time', 'duration', 'location', 'created_at']
+        fields = ['id', 'project', 'project_id', 'date', 'time', 'duration', 'location', 'created_at']
 
 class GallerySerializer(serializers.ModelSerializer):
     
     project = ProjectSerializer(read_only=True)
+    project_id = serializers.UUIDField(write_only=True)
     
     class Meta:
         model = Gallery
-        fields = ['id', 'project', 'gallery_name', 'picture_count', 'is_visible', 'url', 'created_at']
+        fields = ['id', 'project', 'project_id', 'gallery_name', 'picture_count', 'is_visible', 'url', 'created_at']
