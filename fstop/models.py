@@ -21,7 +21,7 @@ class Client(models.Model):
     state = models.CharField(max_length=2)
     zip_code = models.CharField(max_length=20)
     email = models.EmailField()
-    phone_number = PhoneNumberField(blank=True)
+    phone_number = PhoneNumberField()
     created_at = models.DateTimeField(auto_now_add=True)
     
 class Project(models.Model):
@@ -69,7 +69,7 @@ class Gallery(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    gallery_name = models.CharField(max_length=20)
+    gallery_name = models.CharField(max_length=50)
     picture_count = models.IntegerField()
     is_visible = models.BooleanField()
     url = models.URLField()
