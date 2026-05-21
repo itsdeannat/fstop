@@ -5,16 +5,28 @@ from rest_framework import viewsets
 from rest_framework.viewsets import ModelViewSet
 from .models import Client, Project, Booking, Gallery
 from .serializers import ClientSerializer, ProjectSerializer, BookingSerializer, GallerySerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from drf_spectacular.utils import extend_schema, OpenApiExample, OpenApiRequest
+from drf_spectacular.types import OpenApiTypes
 
 # Create your views here.
 
 
 class ClientViewSet(viewsets.ModelViewSet):
+    
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
+    
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
@@ -27,6 +39,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 
 class BookingViewSet(viewsets.ModelViewSet):
+    
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
 
@@ -38,6 +54,10 @@ class BookingViewSet(viewsets.ModelViewSet):
         return queryset
 
 class GalleryViewSet(viewsets.ModelViewSet):
+    
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
 
