@@ -124,3 +124,10 @@ PHONENUMBER_DEFAULT_REGION = "US"
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Fstop',
+    'DESCRIPTION': 'The Fstop API enables developers to build integrations and automations for the Fstop photography business platform. Manage clients, projects, bookings, and galleries programmatically.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
