@@ -1,7 +1,10 @@
 openapi: 3.0.3
 info:
-  title: ''
-  version: 0.0.0
+  title: Fstop
+  version: 1.0.0
+  description: The Fstop API enables developers to build integrations and automations
+    for the Fstop photography business platform. Manage clients, projects, bookings,
+    and galleries programmatically.
 paths:
   /bookings/:
     get:
