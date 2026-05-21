@@ -18,7 +18,7 @@ jobs:
           go-version: '1.21'
 
       - name: Install SpecGate
-        run: go install github.com/itsdeannat/specgate@v0.4.1
+        run: go install github.com/itsdeannat/specgate@v1.0.0
 
       - name: Check OpenAPI spec
         run: $(go env GOPATH)/bin/specgate check schema.yml
