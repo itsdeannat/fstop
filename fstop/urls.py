@@ -13,6 +13,5 @@ router.register(r'galleries', GalleryViewSet, basename='gallery')
 
 
 urlpatterns = [
-    path('', include(router.urls)),
     path('api/', include(router.urls)) 
 ]
