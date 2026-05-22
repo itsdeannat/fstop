@@ -6,8 +6,8 @@ name = "pypi"
 [packages]
 djangorestframework = "*"
 django-phonenumber-field = {extras = ["phonenumberslite"], version = "*"}
-djangorestframework-simplejwt = "*"
 drf-spectacular = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
