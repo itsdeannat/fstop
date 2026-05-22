@@ -70,39 +70,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Booking'
+              $ref: '#/components/schemas/BookingCreate'
             examples:
-              SuccessfulResponse:
+              Request:
                 value:
-                  id: 770e8400-e29b-41d4-a716-446655440001
-                  project:
-                    id: 660e8400-e29b-41d4-a716-446655440000
-                    project_name: Wedding
-                    project_type: event
-                    client:
-                      id: 550e8400-e29b-41d4-a716-446655440000
-                      first_name: John
-                      last_name: Doe
-                      city: Cleveland
-                      state: OH
-                      zip_code: '44122'
-                      email: john.doe@example.com
-                      phone_number: '+12161231234'
-                      created_at: '2026-05-21T10:00:00Z'
-                    created_at: '2026-05-21T10:15:00Z'
+                  project_id: 660e8400-e29b-41d4-a716-446655440000
                   date: '2026-06-15'
                   time: '14:00:00'
                   duration: 480
                   location: Downtown Venue
-                  created_at: '2026-05-21T10:30:00Z'
-                summary: Successful Response
-                description: Booking created successfully
+                description: Example booking creation request
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Booking'
+              $ref: '#/components/schemas/BookingCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Booking'
+              $ref: '#/components/schemas/BookingCreate'
         required: true
       security:
       - jwtAuth: []
@@ -252,39 +235,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Booking'
-            examples:
-              SuccessfulResponse:
-                value:
-                  id: 770e8400-e29b-41d4-a716-446655440000
-                  project:
-                    id: 660e8400-e29b-41d4-a716-446655440000
-                    project_name: Wedding
-                    project_type: event
-                    client:
-                      id: 550e8400-e29b-41d4-a716-446655440000
-                      first_name: John
-                      last_name: Doe
-                      city: Cleveland
-                      state: OH
-                      zip_code: '44122'
-                      email: john.doe@example.com
-                      phone_number: '+12161231234'
-                      created_at: '2026-05-21T10:00:00Z'
-                    created_at: '2026-05-21T10:15:00Z'
-                  date: '2026-06-16'
-                  time: '15:00:00'
-                  duration: 480
-                  location: Downtown Venue - Updated
-                  created_at: '2026-05-21T10:30:00Z'
-                summary: Successful Response
-                description: Booking updated successfully
+              $ref: '#/components/schemas/BookingCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Booking'
+              $ref: '#/components/schemas/BookingCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Booking'
+              $ref: '#/components/schemas/BookingCreate'
         required: true
       security:
       - jwtAuth: []
@@ -470,18 +427,6 @@ paths:
                   summary: Successful Response
                   description: List of clients
           description: ''
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequest'
-              examples:
-                BadRequest:
-                  value:
-                    detail: Invalid JSON in request body.
-                  summary: Bad Request
-                  description: The JSON request body could not be parsed
-          description: ''
         '401':
           content:
             application/json:
@@ -502,11 +447,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Client'
+              $ref: '#/components/schemas/ClientCreate'
             examples:
-              SuccessfulResponse:
+              Request:
                 value:
-                  id: 550e8400-e29b-41d4-a716-446655440002
                   first_name: Alice
                   last_name: Johnson
                   city: Cincinnati
@@ -514,15 +458,13 @@ paths:
                   zip_code: '45202'
                   email: alice.johnson@example.com
                   phone_number: '+12161239999'
-                  created_at: '2026-05-21T10:10:00Z'
-                summary: Successful Response
-                description: Client created successfully
+                description: Example client creation request
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Client'
+              $ref: '#/components/schemas/ClientCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Client'
+              $ref: '#/components/schemas/ClientCreate'
         required: true
       security:
       - jwtAuth: []
@@ -648,27 +590,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Client'
-            examples:
-              SuccessfulResponse:
-                value:
-                  id: 550e8400-e29b-41d4-a716-446655440000
-                  first_name: John
-                  last_name: Doe Updated
-                  city: Cleveland
-                  state: OH
-                  zip_code: '44122'
-                  email: john.updated@example.com
-                  phone_number: '+12161231234'
-                  created_at: '2026-05-21T10:00:00Z'
-                summary: Successful Response
-                description: Client updated successfully
+              $ref: '#/components/schemas/ClientCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Client'
+              $ref: '#/components/schemas/ClientCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Client'
+              $ref: '#/components/schemas/ClientCreate'
         required: true
       security:
       - jwtAuth: []
@@ -866,39 +794,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Gallery'
+              $ref: '#/components/schemas/GalleryCreate'
             examples:
-              SuccessfulResponse:
+              Request:
                 value:
-                  id: 880e8400-e29b-41d4-a716-446655440001
-                  project:
-                    id: 660e8400-e29b-41d4-a716-446655440000
-                    project_name: Wedding
-                    project_type: event
-                    client:
-                      id: 550e8400-e29b-41d4-a716-446655440000
-                      first_name: John
-                      last_name: Doe
-                      city: Cleveland
-                      state: OH
-                      zip_code: '44122'
-                      email: john.doe@example.com
-                      phone_number: '+12161231234'
-                      created_at: '2026-05-21T10:00:00Z'
-                    created_at: '2026-05-21T10:15:00Z'
+                  project_id: 660e8400-e29b-41d4-a716-446655440000
                   gallery_name: Reception Photos
                   picture_count: 89
                   is_visible: true
                   url: https://example.com/galleries/reception
-                  created_at: '2026-05-21T10:35:00Z'
-                summary: Successful Response
-                description: Gallery created successfully
+                description: Example gallery creation request
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Gallery'
+              $ref: '#/components/schemas/GalleryCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Gallery'
+              $ref: '#/components/schemas/GalleryCreate'
         required: true
       security:
       - jwtAuth: []
@@ -1048,39 +959,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Gallery'
-            examples:
-              SuccessfulResponse:
-                value:
-                  id: 880e8400-e29b-41d4-a716-446655440000
-                  project:
-                    id: 660e8400-e29b-41d4-a716-446655440000
-                    project_name: Wedding
-                    project_type: event
-                    client:
-                      id: 550e8400-e29b-41d4-a716-446655440000
-                      first_name: John
-                      last_name: Doe
-                      city: Cleveland
-                      state: OH
-                      zip_code: '44122'
-                      email: john.doe@example.com
-                      phone_number: '+12161231234'
-                      created_at: '2026-05-21T10:00:00Z'
-                    created_at: '2026-05-21T10:15:00Z'
-                  gallery_name: Ceremony Photos - Updated
-                  picture_count: 125
-                  is_visible: false
-                  url: https://example.com/galleries/ceremony
-                  created_at: '2026-05-21T10:35:00Z'
-                summary: Successful Response
-                description: Gallery updated successfully
+              $ref: '#/components/schemas/GalleryCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Gallery'
+              $ref: '#/components/schemas/GalleryCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Gallery'
+              $ref: '#/components/schemas/GalleryCreate'
         required: true
       security:
       - jwtAuth: []
@@ -1230,7 +1115,7 @@ paths:
     get:
       operationId: list_projects
       description: Retrieve a list of all projects. Optionally filter by client_id
-        query parameter. Returns an empty list if no clients match the filter.
+        query parameter.
       tags:
       - projects
       security:
@@ -1260,20 +1145,6 @@ paths:
                         phone_number: '+12161231234'
                         created_at: '2026-05-21T10:00:00Z'
                       created_at: '2026-05-21T10:15:00Z'
-                    - id: 660e8400-e29b-41d4-a716-446655440001
-                      project_name: Family Portraits
-                      project_type: portrait
-                      client:
-                        id: 550e8400-e29b-41d4-a716-446655440001
-                        first_name: Jane
-                        last_name: Smith
-                        city: Columbus
-                        state: OH
-                        zip_code: '43215'
-                        email: jane.smith@example.com
-                        phone_number: '+12161235678'
-                        created_at: '2026-05-21T10:05:00Z'
-                      created_at: '2026-05-21T10:20:00Z'
                   summary: Successful Response
                   description: List of projects
           description: ''
@@ -1297,32 +1168,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Project'
+              $ref: '#/components/schemas/ProjectCreate'
             examples:
-              SuccessfulResponse:
+              Request:
                 value:
-                  id: 660e8400-e29b-41d4-a716-446655440002
                   project_name: Birthday Party
                   project_type: party
-                  client:
-                    id: 550e8400-e29b-41d4-a716-446655440002
-                    first_name: Alice
-                    last_name: Johnson
-                    city: Cincinnati
-                    state: OH
-                    zip_code: '45202'
-                    email: alice.johnson@example.com
-                    phone_number: '+12161239999'
-                    created_at: '2026-05-21T10:10:00Z'
-                  created_at: '2026-05-21T10:25:00Z'
-                summary: Successful Response
-                description: Project created successfully
+                  client_id: 550e8400-e29b-41d4-a716-446655440002
+                description: Example project creation request
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Project'
+              $ref: '#/components/schemas/ProjectCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Project'
+              $ref: '#/components/schemas/ProjectCreate'
         required: true
       security:
       - jwtAuth: []
@@ -1458,32 +1317,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Project'
-            examples:
-              SuccessfulResponse:
-                value:
-                  id: 660e8400-e29b-41d4-a716-446655440000
-                  project_name: Wedding - Updated
-                  project_type: event
-                  client:
-                    id: 550e8400-e29b-41d4-a716-446655440000
-                    first_name: John
-                    last_name: Doe
-                    city: Cleveland
-                    state: OH
-                    zip_code: '44122'
-                    email: john.doe@example.com
-                    phone_number: '+12161231234'
-                    created_at: '2026-05-21T10:00:00Z'
-                  created_at: '2026-05-21T10:15:00Z'
-                summary: Successful Response
-                description: Project updated successfully
+              $ref: '#/components/schemas/ProjectCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Project'
+              $ref: '#/components/schemas/ProjectCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Project'
+              $ref: '#/components/schemas/ProjectCreate'
         required: true
       security:
       - jwtAuth: []
@@ -1732,6 +1572,36 @@ components:
       - project
       - project_id
       - time
+    BookingCreate:
+      type: object
+      description: Serializer for creating bookings - excludes read-only fields (id,
+        project, created_at)
+      properties:
+        project_id:
+          type: string
+          format: uuid
+          description: UUID of the project for this booking
+        date:
+          type: string
+          format: date
+          description: Date of the booking
+        time:
+          type: string
+          format: time
+          description: Time of the booking
+        duration:
+          type: integer
+          description: Booking duration in minutes
+        location:
+          type: string
+          description: Booking location
+          maxLength: 20
+      required:
+      - date
+      - duration
+      - location
+      - project_id
+      - time
     Client:
       type: object
       properties:
@@ -1782,6 +1652,46 @@ components:
       - phone_number
       - state
       - zip_code
+    ClientCreate:
+      type: object
+      description: Serializer for creating clients - excludes read-only fields (id,
+        created_at)
+      properties:
+        first_name:
+          type: string
+          description: Client's first name
+          maxLength: 20
+        last_name:
+          type: string
+          description: Client's last name
+          maxLength: 20
+        city:
+          type: string
+          description: City where client is located
+          maxLength: 20
+        state:
+          type: string
+          description: State abbreviation (e.g., CA, NY)
+          maxLength: 2
+        zip_code:
+          type: string
+          description: Postal code for client's address
+          maxLength: 20
+        email:
+          type: string
+          format: email
+          description: Client's email address for contact
+        phone_number:
+          type: string
+          description: Client's phone number
+      required:
+      - city
+      - email
+      - first_name
+      - last_name
+      - phone_number
+      - state
+      - zip_code
     Gallery:
       type: object
       properties:
@@ -1826,6 +1736,35 @@ components:
       - is_visible
       - picture_count
       - project
+      - project_id
+      - url
+    GalleryCreate:
+      type: object
+      description: Serializer for creating galleries - excludes read-only fields (id,
+        project, created_at)
+      properties:
+        project_id:
+          type: string
+          format: uuid
+          description: UUID of the project for this gallery
+        gallery_name:
+          type: string
+          description: Name of the gallery
+          maxLength: 50
+        picture_count:
+          type: integer
+          description: Number of pictures in the gallery
+        is_visible:
+          type: boolean
+          description: Whether the gallery is publicly visible
+        url:
+          type: string
+          format: uri
+          description: URL link to the gallery
+      required:
+      - gallery_name
+      - is_visible
+      - picture_count
       - project_id
       - url
     NotFound:
@@ -2029,6 +1968,32 @@ components:
       - id
       - project_name
       - project_type
+    ProjectCreate:
+      type: object
+      description: Serializer for creating projects - excludes read-only fields (id,
+        client, created_at)
+      properties:
+        project_name:
+          type: string
+          description: Name of the project
+          maxLength: 20
+        project_type:
+          allOf:
+          - $ref: '#/components/schemas/ProjectTypeEnum'
+          description: |-
+            Type of project (event, portrait, or party)
+
+            * `event` - event
+            * `portrait` - portrait
+            * `party` - party
+        client_id:
+          type: string
+          format: uuid
+          description: UUID of the client for this project
+      required:
+      - client_id
+      - project_name
+      - project_type
     ProjectTypeEnum:
       enum:
       - event
@@ -2083,3 +2048,6 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+servers:
+- url: https://fstop.photo
+  description: Production server
