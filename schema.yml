@@ -6,15 +6,15 @@ info:
     for the Fstop photography business platform. Manage clients, projects, bookings,
     and galleries programmatically.
 paths:
-  /bookings/:
+  /api/bookings/:
     get:
-      operationId: bookings_list
+      operationId: list_bookings
+      description: Retrieve a list of all bookings. Optionally filter by project_id
+        query parameter.
       tags:
       - bookings
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -23,9 +23,47 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Booking'
+              examples:
+                SuccessfulResponse:
+                  value:
+                  - - id: 770e8400-e29b-41d4-a716-446655440000
+                      project:
+                        id: 660e8400-e29b-41d4-a716-446655440000
+                        project_name: Wedding
+                        project_type: event
+                        client:
+                          id: 550e8400-e29b-41d4-a716-446655440000
+                          first_name: John
+                          last_name: Doe
+                          city: Cleveland
+                          state: OH
+                          zip_code: '44122'
+                          email: john.doe@example.com
+                          phone_number: '+12161231234'
+                          created_at: '2026-05-21T10:00:00Z'
+                        created_at: '2026-05-21T10:15:00Z'
+                      date: '2026-06-15'
+                      time: '14:00:00'
+                      duration: 480
+                      location: Downtown Venue
+                      created_at: '2026-05-21T10:30:00Z'
+                  summary: Successful Response
+                  description: List of bookings
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
           description: ''
     post:
-      operationId: bookings_create
+      operationId: create_booking
+      description: Create a new booking for a project
       tags:
       - bookings
       requestBody:
@@ -33,6 +71,32 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Booking'
+            examples:
+              SuccessfulResponse:
+                value:
+                  id: 770e8400-e29b-41d4-a716-446655440001
+                  project:
+                    id: 660e8400-e29b-41d4-a716-446655440000
+                    project_name: Wedding
+                    project_type: event
+                    client:
+                      id: 550e8400-e29b-41d4-a716-446655440000
+                      first_name: John
+                      last_name: Doe
+                      city: Cleveland
+                      state: OH
+                      zip_code: '44122'
+                      email: john.doe@example.com
+                      phone_number: '+12161231234'
+                      created_at: '2026-05-21T10:00:00Z'
+                    created_at: '2026-05-21T10:15:00Z'
+                  date: '2026-06-15'
+                  time: '14:00:00'
+                  duration: 480
+                  location: Downtown Venue
+                  created_at: '2026-05-21T10:30:00Z'
+                summary: Successful Response
+                description: Booking created successfully
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Booking'
@@ -41,19 +105,68 @@ paths:
               $ref: '#/components/schemas/Booking'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Booking'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 770e8400-e29b-41d4-a716-446655440001
+                    project:
+                      id: 660e8400-e29b-41d4-a716-446655440000
+                      project_name: Wedding
+                      project_type: event
+                      client:
+                        id: 550e8400-e29b-41d4-a716-446655440000
+                        first_name: John
+                        last_name: Doe
+                        city: Cleveland
+                        state: OH
+                        zip_code: '44122'
+                        email: john.doe@example.com
+                        phone_number: '+12161231234'
+                        created_at: '2026-05-21T10:00:00Z'
+                      created_at: '2026-05-21T10:15:00Z'
+                    date: '2026-06-15'
+                    time: '14:00:00'
+                    duration: 480
+                    location: Downtown Venue
+                    created_at: '2026-05-21T10:30:00Z'
+                  summary: Successful Response
+                  description: Booking created successfully
           description: ''
-  /bookings/{id}/:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+              examples:
+                BadRequest:
+                  value:
+                    duration:
+                    - Ensure this value is greater than or equal to 0.
+                  summary: Bad Request
+                  description: Invalid booking data provided
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+  /api/bookings/{id}/:
     get:
-      operationId: bookings_retrieve
+      operationId: retrieve_booking
+      description: Retrieve a single booking by ID
       parameters:
       - in: path
         name: id
@@ -65,18 +178,66 @@ paths:
       tags:
       - bookings
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Booking'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 770e8400-e29b-41d4-a716-446655440000
+                    project:
+                      id: 660e8400-e29b-41d4-a716-446655440000
+                      project_name: Wedding
+                      project_type: event
+                      client:
+                        id: 550e8400-e29b-41d4-a716-446655440000
+                        first_name: John
+                        last_name: Doe
+                        city: Cleveland
+                        state: OH
+                        zip_code: '44122'
+                        email: john.doe@example.com
+                        phone_number: '+12161231234'
+                        created_at: '2026-05-21T10:00:00Z'
+                      created_at: '2026-05-21T10:15:00Z'
+                    date: '2026-06-15'
+                    time: '14:00:00'
+                    duration: 480
+                    location: Downtown Venue
+                    created_at: '2026-05-21T10:30:00Z'
+                  summary: Successful Response
+                  description: Single booking details
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Booking does not exist
           description: ''
     put:
-      operationId: bookings_update
+      operationId: update_booking
+      description: Update an existing booking
       parameters:
       - in: path
         name: id
@@ -92,6 +253,32 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Booking'
+            examples:
+              SuccessfulResponse:
+                value:
+                  id: 770e8400-e29b-41d4-a716-446655440000
+                  project:
+                    id: 660e8400-e29b-41d4-a716-446655440000
+                    project_name: Wedding
+                    project_type: event
+                    client:
+                      id: 550e8400-e29b-41d4-a716-446655440000
+                      first_name: John
+                      last_name: Doe
+                      city: Cleveland
+                      state: OH
+                      zip_code: '44122'
+                      email: john.doe@example.com
+                      phone_number: '+12161231234'
+                      created_at: '2026-05-21T10:00:00Z'
+                    created_at: '2026-05-21T10:15:00Z'
+                  date: '2026-06-16'
+                  time: '15:00:00'
+                  duration: 480
+                  location: Downtown Venue - Updated
+                  created_at: '2026-05-21T10:30:00Z'
+                summary: Successful Response
+                description: Booking updated successfully
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Booking'
@@ -100,15 +287,75 @@ paths:
               $ref: '#/components/schemas/Booking'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Booking'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 770e8400-e29b-41d4-a716-446655440000
+                    project:
+                      id: 660e8400-e29b-41d4-a716-446655440000
+                      project_name: Wedding
+                      project_type: event
+                      client:
+                        id: 550e8400-e29b-41d4-a716-446655440000
+                        first_name: John
+                        last_name: Doe
+                        city: Cleveland
+                        state: OH
+                        zip_code: '44122'
+                        email: john.doe@example.com
+                        phone_number: '+12161231234'
+                        created_at: '2026-05-21T10:00:00Z'
+                      created_at: '2026-05-21T10:15:00Z'
+                    date: '2026-06-16'
+                    time: '15:00:00'
+                    duration: 480
+                    location: Downtown Venue - Updated
+                    created_at: '2026-05-21T10:30:00Z'
+                  summary: Successful Response
+                  description: Booking updated successfully
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+              examples:
+                BadRequest:
+                  value:
+                    duration:
+                    - Ensure this value is greater than or equal to 0.
+                  summary: Bad Request
+                  description: Invalid booking data provided
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Booking does not exist
           description: ''
     patch:
       operationId: bookings_partial_update
@@ -134,9 +381,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedBooking'
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -145,7 +390,8 @@ paths:
                 $ref: '#/components/schemas/Booking'
           description: ''
     delete:
-      operationId: bookings_destroy
+      operationId: delete_booking
+      description: Delete a booking
       parameters:
       - in: path
         name: id
@@ -157,21 +403,41 @@ paths:
       tags:
       - bookings
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
-  /clients/:
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Booking does not exist
+          description: ''
+  /api/clients/:
     get:
-      operationId: clients_list
+      operationId: list_clients
+      description: Get a list of all clients
       tags:
       - clients
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -180,9 +446,56 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Client'
+              examples:
+                SuccessfulResponse:
+                  value:
+                  - - id: 550e8400-e29b-41d4-a716-446655440000
+                      first_name: John
+                      last_name: Doe
+                      city: Oxford
+                      state: OH
+                      zip_code: '45056'
+                      email: john.doe@example.com
+                      phone_number: '+12161231234'
+                      created_at: '2026-05-21T10:00:00Z'
+                    - id: 550e8400-e29b-41d4-a716-446655440001
+                      first_name: Jane
+                      last_name: Smith
+                      city: Columbus
+                      state: OH
+                      zip_code: '43215'
+                      email: jane.smith@example.com
+                      phone_number: '+12161235678'
+                      created_at: '2026-05-21T10:05:00Z'
+                  summary: Successful Response
+                  description: List of clients
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+              examples:
+                BadRequest:
+                  value:
+                    detail: Invalid JSON in request body.
+                  summary: Bad Request
+                  description: The JSON request body could not be parsed
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
           description: ''
     post:
-      operationId: clients_create
+      operationId: create_client
+      description: Create a new client
       tags:
       - clients
       requestBody:
@@ -190,6 +503,20 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Client'
+            examples:
+              SuccessfulResponse:
+                value:
+                  id: 550e8400-e29b-41d4-a716-446655440002
+                  first_name: Alice
+                  last_name: Johnson
+                  city: Cincinnati
+                  state: OH
+                  zip_code: '45202'
+                  email: alice.johnson@example.com
+                  phone_number: '+12161239999'
+                  created_at: '2026-05-21T10:10:00Z'
+                summary: Successful Response
+                description: Client created successfully
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Client'
@@ -198,19 +525,56 @@ paths:
               $ref: '#/components/schemas/Client'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Client'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 550e8400-e29b-41d4-a716-446655440002
+                    first_name: Alice
+                    last_name: Johnson
+                    city: Cincinnati
+                    state: OH
+                    zip_code: '45202'
+                    email: alice.johnson@example.com
+                    phone_number: '+12161239999'
+                    created_at: '2026-05-21T10:10:00Z'
+                  summary: Successful Response
+                  description: Client created successfully
           description: ''
-  /clients/{id}/:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+              examples:
+                BadRequest:
+                  value:
+                    email:
+                    - Enter a valid email address.
+                  summary: Bad Request
+                  description: Invalid client data provided
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+  /api/clients/{id}/:
     get:
-      operationId: clients_retrieve
+      operationId: retrieve_client
+      description: Retrieve a single client by ID
       parameters:
       - in: path
         name: id
@@ -222,18 +586,54 @@ paths:
       tags:
       - clients
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Client'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 550e8400-e29b-41d4-a716-446655440000
+                    first_name: John
+                    last_name: Doe
+                    city: Cleveland
+                    state: OH
+                    zip_code: '44122'
+                    email: john.doe@example.com
+                    phone_number: '+12161231234'
+                    created_at: '2026-05-21T10:00:00Z'
+                  summary: Successful Response
+                  description: Single client details
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Client does not exist
           description: ''
     put:
-      operationId: clients_update
+      operationId: update_client
+      description: Update an existing client
       parameters:
       - in: path
         name: id
@@ -249,6 +649,20 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Client'
+            examples:
+              SuccessfulResponse:
+                value:
+                  id: 550e8400-e29b-41d4-a716-446655440000
+                  first_name: John
+                  last_name: Doe Updated
+                  city: Cleveland
+                  state: OH
+                  zip_code: '44122'
+                  email: john.updated@example.com
+                  phone_number: '+12161231234'
+                  created_at: '2026-05-21T10:00:00Z'
+                summary: Successful Response
+                description: Client updated successfully
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Client'
@@ -257,15 +671,63 @@ paths:
               $ref: '#/components/schemas/Client'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Client'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 550e8400-e29b-41d4-a716-446655440000
+                    first_name: John
+                    last_name: Doe Updated
+                    city: Cleveland
+                    state: OH
+                    zip_code: '44122'
+                    email: john.updated@example.com
+                    phone_number: '+12161231234'
+                    created_at: '2026-05-21T10:00:00Z'
+                  summary: Successful Response
+                  description: Client updated successfully
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+              examples:
+                BadRequest:
+                  value:
+                    email:
+                    - Enter a valid email address.
+                  summary: Bad Request
+                  description: Invalid client data provided
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Client does not exist
           description: ''
     patch:
       operationId: clients_partial_update
@@ -291,9 +753,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedClient'
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -302,7 +762,8 @@ paths:
                 $ref: '#/components/schemas/Client'
           description: ''
     delete:
-      operationId: clients_destroy
+      operationId: delete_client
+      description: Delete a client
       parameters:
       - in: path
         name: id
@@ -314,21 +775,42 @@ paths:
       tags:
       - clients
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
-  /galleries/:
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Client does not exist
+          description: ''
+  /api/galleries/:
     get:
-      operationId: galleries_list
+      operationId: list_galleries
+      description: Retrieve a list of all galleries. Optionally filter by project_id
+        query parameter.
       tags:
       - galleries
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -337,9 +819,47 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Gallery'
+              examples:
+                SuccessfulResponse:
+                  value:
+                  - - id: 880e8400-e29b-41d4-a716-446655440000
+                      project:
+                        id: 660e8400-e29b-41d4-a716-446655440000
+                        project_name: Wedding
+                        project_type: event
+                        client:
+                          id: 550e8400-e29b-41d4-a716-446655440000
+                          first_name: John
+                          last_name: Doe
+                          city: Cleveland
+                          state: OH
+                          zip_code: '44122'
+                          email: john.doe@example.com
+                          phone_number: '+12161231234'
+                          created_at: '2026-05-21T10:00:00Z'
+                        created_at: '2026-05-21T10:15:00Z'
+                      gallery_name: Ceremony Photos
+                      picture_count: 125
+                      is_visible: true
+                      url: https://example.com/galleries/ceremony
+                      created_at: '2026-05-21T10:35:00Z'
+                  summary: Successful Response
+                  description: List of galleries
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
           description: ''
     post:
-      operationId: galleries_create
+      operationId: create_gallery
+      description: Create a new gallery for a project
       tags:
       - galleries
       requestBody:
@@ -347,6 +867,32 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Gallery'
+            examples:
+              SuccessfulResponse:
+                value:
+                  id: 880e8400-e29b-41d4-a716-446655440001
+                  project:
+                    id: 660e8400-e29b-41d4-a716-446655440000
+                    project_name: Wedding
+                    project_type: event
+                    client:
+                      id: 550e8400-e29b-41d4-a716-446655440000
+                      first_name: John
+                      last_name: Doe
+                      city: Cleveland
+                      state: OH
+                      zip_code: '44122'
+                      email: john.doe@example.com
+                      phone_number: '+12161231234'
+                      created_at: '2026-05-21T10:00:00Z'
+                    created_at: '2026-05-21T10:15:00Z'
+                  gallery_name: Reception Photos
+                  picture_count: 89
+                  is_visible: true
+                  url: https://example.com/galleries/reception
+                  created_at: '2026-05-21T10:35:00Z'
+                summary: Successful Response
+                description: Gallery created successfully
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Gallery'
@@ -355,19 +901,68 @@ paths:
               $ref: '#/components/schemas/Gallery'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Gallery'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 880e8400-e29b-41d4-a716-446655440001
+                    project:
+                      id: 660e8400-e29b-41d4-a716-446655440000
+                      project_name: Wedding
+                      project_type: event
+                      client:
+                        id: 550e8400-e29b-41d4-a716-446655440000
+                        first_name: John
+                        last_name: Doe
+                        city: Cleveland
+                        state: OH
+                        zip_code: '44122'
+                        email: john.doe@example.com
+                        phone_number: '+12161231234'
+                        created_at: '2026-05-21T10:00:00Z'
+                      created_at: '2026-05-21T10:15:00Z'
+                    gallery_name: Reception Photos
+                    picture_count: 89
+                    is_visible: true
+                    url: https://example.com/galleries/reception
+                    created_at: '2026-05-21T10:35:00Z'
+                  summary: Successful Response
+                  description: Gallery created successfully
           description: ''
-  /galleries/{id}/:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+              examples:
+                BadRequest:
+                  value:
+                    url:
+                    - Enter a valid URL.
+                  summary: Bad Request
+                  description: Invalid gallery data provided
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+  /api/galleries/{id}/:
     get:
-      operationId: galleries_retrieve
+      operationId: retrieve_gallery
+      description: Retrieve a single gallery by ID
       parameters:
       - in: path
         name: id
@@ -379,18 +974,66 @@ paths:
       tags:
       - galleries
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Gallery'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 880e8400-e29b-41d4-a716-446655440000
+                    project:
+                      id: 660e8400-e29b-41d4-a716-446655440000
+                      project_name: Wedding
+                      project_type: event
+                      client:
+                        id: 550e8400-e29b-41d4-a716-446655440000
+                        first_name: John
+                        last_name: Doe
+                        city: Cleveland
+                        state: OH
+                        zip_code: '44122'
+                        email: john.doe@example.com
+                        phone_number: '+12161231234'
+                        created_at: '2026-05-21T10:00:00Z'
+                      created_at: '2026-05-21T10:15:00Z'
+                    gallery_name: Ceremony Photos
+                    picture_count: 125
+                    is_visible: true
+                    url: https://example.com/galleries/ceremony
+                    created_at: '2026-05-21T10:35:00Z'
+                  summary: Successful Response
+                  description: Single gallery details
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Gallery does not exist
           description: ''
     put:
-      operationId: galleries_update
+      operationId: update_gallery
+      description: Update an existing gallery
       parameters:
       - in: path
         name: id
@@ -406,6 +1049,32 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Gallery'
+            examples:
+              SuccessfulResponse:
+                value:
+                  id: 880e8400-e29b-41d4-a716-446655440000
+                  project:
+                    id: 660e8400-e29b-41d4-a716-446655440000
+                    project_name: Wedding
+                    project_type: event
+                    client:
+                      id: 550e8400-e29b-41d4-a716-446655440000
+                      first_name: John
+                      last_name: Doe
+                      city: Cleveland
+                      state: OH
+                      zip_code: '44122'
+                      email: john.doe@example.com
+                      phone_number: '+12161231234'
+                      created_at: '2026-05-21T10:00:00Z'
+                    created_at: '2026-05-21T10:15:00Z'
+                  gallery_name: Ceremony Photos - Updated
+                  picture_count: 125
+                  is_visible: false
+                  url: https://example.com/galleries/ceremony
+                  created_at: '2026-05-21T10:35:00Z'
+                summary: Successful Response
+                description: Gallery updated successfully
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Gallery'
@@ -414,15 +1083,75 @@ paths:
               $ref: '#/components/schemas/Gallery'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Gallery'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 880e8400-e29b-41d4-a716-446655440000
+                    project:
+                      id: 660e8400-e29b-41d4-a716-446655440000
+                      project_name: Wedding
+                      project_type: event
+                      client:
+                        id: 550e8400-e29b-41d4-a716-446655440000
+                        first_name: John
+                        last_name: Doe
+                        city: Cleveland
+                        state: OH
+                        zip_code: '44122'
+                        email: john.doe@example.com
+                        phone_number: '+12161231234'
+                        created_at: '2026-05-21T10:00:00Z'
+                      created_at: '2026-05-21T10:15:00Z'
+                    gallery_name: Ceremony Photos - Updated
+                    picture_count: 125
+                    is_visible: false
+                    url: https://example.com/galleries/ceremony
+                    created_at: '2026-05-21T10:35:00Z'
+                  summary: Successful Response
+                  description: Gallery updated successfully
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+              examples:
+                BadRequest:
+                  value:
+                    url:
+                    - Enter a valid URL.
+                  summary: Bad Request
+                  description: Invalid gallery data provided
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Gallery does not exist
           description: ''
     patch:
       operationId: galleries_partial_update
@@ -448,9 +1177,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedGallery'
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -459,7 +1186,8 @@ paths:
                 $ref: '#/components/schemas/Gallery'
           description: ''
     delete:
-      operationId: galleries_destroy
+      operationId: delete_gallery
+      description: Delete a gallery
       parameters:
       - in: path
         name: id
@@ -471,21 +1199,42 @@ paths:
       tags:
       - galleries
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
-  /projects/:
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Gallery does not exist
+          description: ''
+  /api/projects/:
     get:
-      operationId: projects_list
+      operationId: list_projects
+      description: Retrieve a list of all projects. Optionally filter by client_id
+        query parameter. Returns an empty list if no clients match the filter.
       tags:
       - projects
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -494,9 +1243,54 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Project'
+              examples:
+                SuccessfulResponse:
+                  value:
+                  - - id: 660e8400-e29b-41d4-a716-446655440000
+                      project_name: Wedding
+                      project_type: event
+                      client:
+                        id: 550e8400-e29b-41d4-a716-446655440000
+                        first_name: John
+                        last_name: Doe
+                        city: Cleveland
+                        state: OH
+                        zip_code: '44122'
+                        email: john.doe@example.com
+                        phone_number: '+12161231234'
+                        created_at: '2026-05-21T10:00:00Z'
+                      created_at: '2026-05-21T10:15:00Z'
+                    - id: 660e8400-e29b-41d4-a716-446655440001
+                      project_name: Family Portraits
+                      project_type: portrait
+                      client:
+                        id: 550e8400-e29b-41d4-a716-446655440001
+                        first_name: Jane
+                        last_name: Smith
+                        city: Columbus
+                        state: OH
+                        zip_code: '43215'
+                        email: jane.smith@example.com
+                        phone_number: '+12161235678'
+                        created_at: '2026-05-21T10:05:00Z'
+                      created_at: '2026-05-21T10:20:00Z'
+                  summary: Successful Response
+                  description: List of projects
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
           description: ''
     post:
-      operationId: projects_create
+      operationId: create_project
+      description: Create a new project for a client
       tags:
       - projects
       requestBody:
@@ -504,6 +1298,25 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Project'
+            examples:
+              SuccessfulResponse:
+                value:
+                  id: 660e8400-e29b-41d4-a716-446655440002
+                  project_name: Birthday Party
+                  project_type: party
+                  client:
+                    id: 550e8400-e29b-41d4-a716-446655440002
+                    first_name: Alice
+                    last_name: Johnson
+                    city: Cincinnati
+                    state: OH
+                    zip_code: '45202'
+                    email: alice.johnson@example.com
+                    phone_number: '+12161239999'
+                    created_at: '2026-05-21T10:10:00Z'
+                  created_at: '2026-05-21T10:25:00Z'
+                summary: Successful Response
+                description: Project created successfully
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Project'
@@ -512,19 +1325,61 @@ paths:
               $ref: '#/components/schemas/Project'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 660e8400-e29b-41d4-a716-446655440002
+                    project_name: Birthday Party
+                    project_type: party
+                    client:
+                      id: 550e8400-e29b-41d4-a716-446655440002
+                      first_name: Alice
+                      last_name: Johnson
+                      city: Cincinnati
+                      state: OH
+                      zip_code: '45202'
+                      email: alice.johnson@example.com
+                      phone_number: '+12161239999'
+                      created_at: '2026-05-21T10:10:00Z'
+                    created_at: '2026-05-21T10:25:00Z'
+                  summary: Successful Response
+                  description: Project created successfully
           description: ''
-  /projects/{id}/:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+              examples:
+                BadRequest:
+                  value:
+                    project_type:
+                    - '"invalid" is not a valid choice.'
+                  summary: Bad Request
+                  description: Invalid project data provided
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+  /api/projects/{id}/:
     get:
-      operationId: projects_retrieve
+      operationId: retrieve_project
+      description: Retrieve a single project by ID
       parameters:
       - in: path
         name: id
@@ -536,18 +1391,59 @@ paths:
       tags:
       - projects
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 660e8400-e29b-41d4-a716-446655440000
+                    project_name: Wedding
+                    project_type: event
+                    client:
+                      id: 550e8400-e29b-41d4-a716-446655440000
+                      first_name: John
+                      last_name: Doe
+                      city: Cleveland
+                      state: OH
+                      zip_code: '44122'
+                      email: john.doe@example.com
+                      phone_number: '+12161231234'
+                      created_at: '2026-05-21T10:00:00Z'
+                    created_at: '2026-05-21T10:15:00Z'
+                  summary: Successful Response
+                  description: Single project details
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Project does not exist
           description: ''
     put:
-      operationId: projects_update
+      operationId: update_project
+      description: Update an existing project
       parameters:
       - in: path
         name: id
@@ -563,6 +1459,25 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Project'
+            examples:
+              SuccessfulResponse:
+                value:
+                  id: 660e8400-e29b-41d4-a716-446655440000
+                  project_name: Wedding - Updated
+                  project_type: event
+                  client:
+                    id: 550e8400-e29b-41d4-a716-446655440000
+                    first_name: John
+                    last_name: Doe
+                    city: Cleveland
+                    state: OH
+                    zip_code: '44122'
+                    email: john.doe@example.com
+                    phone_number: '+12161231234'
+                    created_at: '2026-05-21T10:00:00Z'
+                  created_at: '2026-05-21T10:15:00Z'
+                summary: Successful Response
+                description: Project updated successfully
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Project'
@@ -571,15 +1486,68 @@ paths:
               $ref: '#/components/schemas/Project'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 660e8400-e29b-41d4-a716-446655440000
+                    project_name: Wedding - Updated
+                    project_type: event
+                    client:
+                      id: 550e8400-e29b-41d4-a716-446655440000
+                      first_name: John
+                      last_name: Doe
+                      city: Cleveland
+                      state: OH
+                      zip_code: '44122'
+                      email: john.doe@example.com
+                      phone_number: '+12161231234'
+                      created_at: '2026-05-21T10:00:00Z'
+                    created_at: '2026-05-21T10:15:00Z'
+                  summary: Successful Response
+                  description: Project updated successfully
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+              examples:
+                BadRequest:
+                  value:
+                    project_type:
+                    - '"invalid" is not a valid choice.'
+                  summary: Bad Request
+                  description: Invalid project data provided
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Project does not exist
           description: ''
     patch:
       operationId: projects_partial_update
@@ -605,9 +1573,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedProject'
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -616,7 +1582,8 @@ paths:
                 $ref: '#/components/schemas/Project'
           description: ''
     delete:
-      operationId: projects_destroy
+      operationId: delete_project
+      description: Delete a project
       parameters:
       - in: path
         name: id
@@ -628,14 +1595,96 @@ paths:
       tags:
       - projects
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              examples:
+                Unauthorized:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  description: Missing authentication credentials
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+              examples:
+                NotFound:
+                  value:
+                    detail: Not found.
+                  summary: Not Found
+                  description: Project does not exist
+          description: ''
+  /api/tokens/:
+    post:
+      operationId: tokens_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - tokens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/tokens/refresh/:
+    post:
+      operationId: tokens_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - tokens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
 components:
   schemas:
+    BadRequest:
+      type: object
+      description: Serializer for 400 Bad Request responses
+      properties:
+        detail:
+          type: string
+          default: Invalid JSON in request body
     Booking:
       type: object
       properties:
@@ -643,32 +1692,37 @@ components:
           type: string
           format: uuid
           readOnly: true
+          description: Unique identifier for the booking
         project:
           allOf:
           - $ref: '#/components/schemas/Project'
           readOnly: true
+          description: Project associated with this booking
         project_id:
           type: string
           format: uuid
           writeOnly: true
+          description: UUID of the project for this booking
         date:
           type: string
           format: date
+          description: Date of the booking
         time:
           type: string
           format: time
+          description: Time of the booking
         duration:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          description: Booking duration in minutes
         location:
           type: string
+          description: Booking location
           maxLength: 20
         created_at:
           type: string
           format: date-time
           readOnly: true
+          description: When the booking was created
       required:
       - created_at
       - date
@@ -685,32 +1739,39 @@ components:
           type: string
           format: uuid
           readOnly: true
+          description: Unique identifier for the client
         first_name:
           type: string
+          description: Client's first name
           maxLength: 20
         last_name:
           type: string
+          description: Client's last name
           maxLength: 20
         city:
           type: string
+          description: City where client is located
           maxLength: 20
         state:
           type: string
+          description: State abbreviation (e.g., CA, NY)
           maxLength: 2
         zip_code:
           type: string
+          description: Postal code for client's address
           maxLength: 20
         email:
           type: string
           format: email
-          maxLength: 254
+          description: Client's email address for contact
         phone_number:
           type: string
-          maxLength: 128
+          description: Client's phone number
         created_at:
           type: string
           format: date-time
           readOnly: true
+          description: Timestamp when client was created
       required:
       - city
       - created_at
@@ -728,32 +1789,36 @@ components:
           type: string
           format: uuid
           readOnly: true
+          description: Unique identifier for the gallery
         project:
           allOf:
           - $ref: '#/components/schemas/Project'
           readOnly: true
+          description: Project associated with this gallery
         project_id:
           type: string
           format: uuid
           writeOnly: true
+          description: UUID of the project for this gallery
         gallery_name:
           type: string
+          description: Name of the gallery
           maxLength: 50
         picture_count:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          description: Number of pictures in the gallery
         is_visible:
           type: boolean
+          description: Whether the gallery is publicly visible
         url:
           type: string
           format: uri
-          maxLength: 200
+          description: URL link to the gallery
         created_at:
           type: string
           format: date-time
           readOnly: true
+          description: Timestamp when gallery was created
       required:
       - created_at
       - gallery_name
@@ -763,6 +1828,13 @@ components:
       - project
       - project_id
       - url
+    NotFound:
+      type: object
+      description: Serializer for 404 Not Found responses
+      properties:
+        detail:
+          type: string
+          default: The requested resource was not found.
     PatchedBooking:
       type: object
       properties:
@@ -770,32 +1842,37 @@ components:
           type: string
           format: uuid
           readOnly: true
+          description: Unique identifier for the booking
         project:
           allOf:
           - $ref: '#/components/schemas/Project'
           readOnly: true
+          description: Project associated with this booking
         project_id:
           type: string
           format: uuid
           writeOnly: true
+          description: UUID of the project for this booking
         date:
           type: string
           format: date
+          description: Date of the booking
         time:
           type: string
           format: time
+          description: Time of the booking
         duration:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          description: Booking duration in minutes
         location:
           type: string
+          description: Booking location
           maxLength: 20
         created_at:
           type: string
           format: date-time
           readOnly: true
+          description: When the booking was created
     PatchedClient:
       type: object
       properties:
@@ -803,32 +1880,39 @@ components:
           type: string
           format: uuid
           readOnly: true
+          description: Unique identifier for the client
         first_name:
           type: string
+          description: Client's first name
           maxLength: 20
         last_name:
           type: string
+          description: Client's last name
           maxLength: 20
         city:
           type: string
+          description: City where client is located
           maxLength: 20
         state:
           type: string
+          description: State abbreviation (e.g., CA, NY)
           maxLength: 2
         zip_code:
           type: string
+          description: Postal code for client's address
           maxLength: 20
         email:
           type: string
           format: email
-          maxLength: 254
+          description: Client's email address for contact
         phone_number:
           type: string
-          maxLength: 128
+          description: Client's phone number
         created_at:
           type: string
           format: date-time
           readOnly: true
+          description: Timestamp when client was created
     PatchedGallery:
       type: object
       properties:
@@ -836,32 +1920,36 @@ components:
           type: string
           format: uuid
           readOnly: true
+          description: Unique identifier for the gallery
         project:
           allOf:
           - $ref: '#/components/schemas/Project'
           readOnly: true
+          description: Project associated with this gallery
         project_id:
           type: string
           format: uuid
           writeOnly: true
+          description: UUID of the project for this gallery
         gallery_name:
           type: string
+          description: Name of the gallery
           maxLength: 50
         picture_count:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          description: Number of pictures in the gallery
         is_visible:
           type: boolean
+          description: Whether the gallery is publicly visible
         url:
           type: string
           format: uri
-          maxLength: 200
+          description: URL link to the gallery
         created_at:
           type: string
           format: date-time
           readOnly: true
+          description: Timestamp when gallery was created
     PatchedProject:
       type: object
       properties:
@@ -869,23 +1957,35 @@ components:
           type: string
           format: uuid
           readOnly: true
+          description: Unique identifier for the project
         project_name:
           type: string
+          description: Name of the project
           maxLength: 20
         project_type:
-          $ref: '#/components/schemas/ProjectTypeEnum'
+          allOf:
+          - $ref: '#/components/schemas/ProjectTypeEnum'
+          description: |-
+            Type of project (event, portrait, or party)
+
+            * `event` - event
+            * `portrait` - portrait
+            * `party` - party
         client:
           allOf:
           - $ref: '#/components/schemas/Client'
           readOnly: true
+          description: Client associated with this project
         client_id:
           type: string
           format: uuid
           writeOnly: true
+          description: UUID of the client for this project
         created_at:
           type: string
           format: date-time
           readOnly: true
+          description: When the project was created
     Project:
       type: object
       properties:
@@ -893,29 +1993,42 @@ components:
           type: string
           format: uuid
           readOnly: true
+          description: Unique identifier for the project
         project_name:
           type: string
+          description: Name of the project
           maxLength: 20
         project_type:
-          $ref: '#/components/schemas/ProjectTypeEnum'
+          allOf:
+          - $ref: '#/components/schemas/ProjectTypeEnum'
+          description: |-
+            Type of project (event, portrait, or party)
+
+            * `event` - event
+            * `portrait` - portrait
+            * `party` - party
         client:
           allOf:
           - $ref: '#/components/schemas/Client'
           readOnly: true
+          description: Client associated with this project
         client_id:
           type: string
           format: uuid
           writeOnly: true
+          description: UUID of the client for this project
         created_at:
           type: string
           format: date-time
           readOnly: true
+          description: When the project was created
       required:
       - client
       - client_id
       - created_at
       - id
       - project_name
+      - project_type
     ProjectTypeEnum:
       enum:
       - event
@@ -923,14 +2036,50 @@ components:
       - party
       type: string
       description: |-
-        * `event` - Event
-        * `portrait` - Portrait
-        * `party` - Party
+        * `event` - event
+        * `portrait` - portrait
+        * `party` - party
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    Unauthorized:
+      type: object
+      description: Serializer for 401 Unauthorized responses
+      properties:
+        detail:
+          type: string
+          default: Authentication credentials were not provided.
   securitySchemes:
-    basicAuth:
+    jwtAuth:
       type: http
-      scheme: basic
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: sessionid
+      scheme: bearer
+      bearerFormat: JWT
