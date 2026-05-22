@@ -4,7 +4,19 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.viewsets import ModelViewSet
 from .models import Client, Project, Booking, Gallery
-from .serializers import ClientSerializer, ProjectSerializer, BookingSerializer, GallerySerializer, BadRequestSerializer, NotFoundSerializer, UnauthorizedSerializer
+from .serializers import (
+    ClientSerializer,
+    ClientCreateSerializer,
+    ProjectSerializer,
+    ProjectCreateSerializer,
+    BookingSerializer,
+    BookingCreateSerializer,
+    GallerySerializer,
+    GalleryCreateSerializer,
+    BadRequestSerializer,
+    UnauthorizedSerializer,
+    NotFoundSerializer,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from drf_spectacular.utils import extend_schema, OpenApiExample, OpenApiRequest
@@ -14,19 +26,17 @@ from drf_spectacular.types import OpenApiTypes
 
 
 class ClientViewSet(viewsets.ModelViewSet):
-    
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
-    
+ 
     @extend_schema(
         operation_id="list_clients",
         description="Get a list of all clients",
         responses={
             200: ClientSerializer(many=True),
-            400: BadRequestSerializer,
             401: UnauthorizedSerializer,
         },
         examples=[
@@ -60,13 +70,6 @@ class ClientViewSet(viewsets.ModelViewSet):
                 status_codes=["200"],
             ),
             OpenApiExample(
-                name="Bad Request",
-                description="The JSON request body could not be parsed",
-                value={"detail": "Invalid JSON in request body."},
-                response_only=True,
-                status_codes=["400"],
-            ),
-            OpenApiExample(
                 name="Unauthorized",
                 description="Missing authentication credentials",
                 value={"detail": "Authentication credentials were not provided."},
@@ -82,13 +85,28 @@ class ClientViewSet(viewsets.ModelViewSet):
     @extend_schema(
         operation_id="create_client",
         description="Create a new client",
-        request=ClientSerializer,
+        request=ClientCreateSerializer,
         responses={
             201: ClientSerializer,
             400: BadRequestSerializer,
             401: UnauthorizedSerializer,
         },
         examples=[
+            OpenApiExample(
+                name="Request",
+                description="Example client creation request",
+                value={
+                    "first_name": "Alice",
+                    "last_name": "Johnson",
+                    "city": "Cincinnati",
+                    "state": "OH",
+                    "zip_code": "45202",
+                    "email": "alice.johnson@example.com",
+                    "phone_number": "+12161239999",
+                },
+                request_only=True,
+                status_codes=["201"],
+            ),
             OpenApiExample(
                 name="Successful Response",
                 description="Client created successfully",
@@ -103,6 +121,7 @@ class ClientViewSet(viewsets.ModelViewSet):
                     "phone_number": "+12161239999",
                     "created_at": "2026-05-21T10:10:00Z",
                 },
+                response_only=True,
                 status_codes=["201"],
             ),
             OpenApiExample(
@@ -173,7 +192,7 @@ class ClientViewSet(viewsets.ModelViewSet):
     @extend_schema(
         operation_id="update_client",
         description="Update an existing client",
-        request=ClientSerializer,
+        request=ClientCreateSerializer,
         responses={
             200: ClientSerializer,
             400: BadRequestSerializer,
@@ -195,6 +214,7 @@ class ClientViewSet(viewsets.ModelViewSet):
                     "phone_number": "+12161231234",
                     "created_at": "2026-05-21T10:00:00Z",
                 },
+                response_only=True,
                 status_codes=["200"],
             ),
             OpenApiExample(
@@ -253,7 +273,11 @@ class ClientViewSet(viewsets.ModelViewSet):
         """Delete a client"""
         return super().destroy(request, pk=pk)
  
+ 
 class ProjectViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     serializer_class = ProjectSerializer
  
     def get_queryset(self):
@@ -265,7 +289,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
  
     @extend_schema(
         operation_id="list_projects",
-        description="Retrieve a list of all projects. Optionally filter by client_id query parameter. Returns an empty list if no clients match the filter.",
+        description="Retrieve a list of all projects. Optionally filter by client_id query parameter.",
         responses={
             200: ProjectSerializer(many=True),
             401: UnauthorizedSerializer,
@@ -292,23 +316,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
                         },
                         "created_at": "2026-05-21T10:15:00Z",
                     },
-                    {
-                        "id": "660e8400-e29b-41d4-a716-446655440001",
-                        "project_name": "Family Portraits",
-                        "project_type": "portrait",
-                        "client": {
-                            "id": "550e8400-e29b-41d4-a716-446655440001",
-                            "first_name": "Jane",
-                            "last_name": "Smith",
-                            "city": "Columbus",
-                            "state": "OH",
-                            "zip_code": "43215",
-                            "email": "jane.smith@example.com",
-                            "phone_number": "+12161235678",
-                            "created_at": "2026-05-21T10:05:00Z",
-                        },
-                        "created_at": "2026-05-21T10:20:00Z",
-                    },
                 ],
                 status_codes=["200"],
             ),
@@ -328,13 +335,24 @@ class ProjectViewSet(viewsets.ModelViewSet):
     @extend_schema(
         operation_id="create_project",
         description="Create a new project for a client",
-        request=ProjectSerializer,
+        request=ProjectCreateSerializer,
         responses={
             201: ProjectSerializer,
             400: BadRequestSerializer,
             401: UnauthorizedSerializer,
         },
         examples=[
+            OpenApiExample(
+                name="Request",
+                description="Example project creation request",
+                value={
+                    "project_name": "Birthday Party",
+                    "project_type": "party",
+                    "client_id": "550e8400-e29b-41d4-a716-446655440002",
+                },
+                request_only=True,
+                status_codes=["201"],
+            ),
             OpenApiExample(
                 name="Successful Response",
                 description="Project created successfully",
@@ -355,6 +373,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
                     },
                     "created_at": "2026-05-21T10:25:00Z",
                 },
+                response_only=True,
                 status_codes=["201"],
             ),
             OpenApiExample(
@@ -431,7 +450,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     @extend_schema(
         operation_id="update_project",
         description="Update an existing project",
-        request=ProjectSerializer,
+        request=ProjectCreateSerializer,
         responses={
             200: ProjectSerializer,
             400: BadRequestSerializer,
@@ -459,6 +478,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
                     },
                     "created_at": "2026-05-21T10:15:00Z",
                 },
+                response_only=True,
                 status_codes=["200"],
             ),
             OpenApiExample(
@@ -519,6 +539,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
  
  
 class BookingViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     serializer_class = BookingSerializer
  
     def get_queryset(self):
@@ -530,7 +553,7 @@ class BookingViewSet(viewsets.ModelViewSet):
  
     @extend_schema(
         operation_id="list_bookings",
-        description="Retrieve a list of all bookings. Optionally filter by project_id query parameter. Returns an empty list if no projects match the filter.",
+        description="Retrieve a list of all bookings. Optionally filter by project_id query parameter.",
         responses={
             200: BookingSerializer(many=True),
             401: UnauthorizedSerializer,
@@ -584,13 +607,26 @@ class BookingViewSet(viewsets.ModelViewSet):
     @extend_schema(
         operation_id="create_booking",
         description="Create a new booking for a project",
-        request=BookingSerializer,
+        request=BookingCreateSerializer,
         responses={
             201: BookingSerializer,
             400: BadRequestSerializer,
             401: UnauthorizedSerializer,
         },
         examples=[
+            OpenApiExample(
+                name="Request",
+                description="Example booking creation request",
+                value={
+                    "project_id": "660e8400-e29b-41d4-a716-446655440000",
+                    "date": "2026-06-15",
+                    "time": "14:00:00",
+                    "duration": 480,
+                    "location": "Downtown Venue",
+                },
+                request_only=True,
+                status_codes=["201"],
+            ),
             OpenApiExample(
                 name="Successful Response",
                 description="Booking created successfully",
@@ -601,16 +637,16 @@ class BookingViewSet(viewsets.ModelViewSet):
                         "project_name": "Wedding",
                         "project_type": "event",
                         "client": {
-                                "id": "550e8400-e29b-41d4-a716-446655440000",
-                                "first_name": "John",
-                                "last_name": "Doe",
-                                "city": "Cleveland",
-                                "state": "OH",
-                                "zip_code": "44122",
-                                "email": "john.doe@example.com",
-                                "phone_number": "+12161231234",
-                                "created_at": "2026-05-21T10:00:00Z",
-                            },
+                            "id": "550e8400-e29b-41d4-a716-446655440000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "city": "Cleveland",
+                            "state": "OH",
+                            "zip_code": "44122",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+12161231234",
+                            "created_at": "2026-05-21T10:00:00Z",
+                        },
                         "created_at": "2026-05-21T10:15:00Z",
                     },
                     "date": "2026-06-15",
@@ -619,6 +655,7 @@ class BookingViewSet(viewsets.ModelViewSet):
                     "location": "Downtown Venue",
                     "created_at": "2026-05-21T10:30:00Z",
                 },
+                response_only=True,
                 status_codes=["201"],
             ),
             OpenApiExample(
@@ -660,16 +697,16 @@ class BookingViewSet(viewsets.ModelViewSet):
                         "project_name": "Wedding",
                         "project_type": "event",
                         "client": {
-                                "id": "550e8400-e29b-41d4-a716-446655440000",
-                                "first_name": "John",
-                                "last_name": "Doe",
-                                "city": "Cleveland",
-                                "state": "OH",
-                                "zip_code": "44122",
-                                "email": "john.doe@example.com",
-                                "phone_number": "+12161231234",
-                                "created_at": "2026-05-21T10:00:00Z",
-                            },
+                            "id": "550e8400-e29b-41d4-a716-446655440000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "city": "Cleveland",
+                            "state": "OH",
+                            "zip_code": "44122",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+12161231234",
+                            "created_at": "2026-05-21T10:00:00Z",
+                        },
                         "created_at": "2026-05-21T10:15:00Z",
                     },
                     "date": "2026-06-15",
@@ -703,7 +740,7 @@ class BookingViewSet(viewsets.ModelViewSet):
     @extend_schema(
         operation_id="update_booking",
         description="Update an existing booking",
-        request=BookingSerializer,
+        request=BookingCreateSerializer,
         responses={
             200: BookingSerializer,
             400: BadRequestSerializer,
@@ -721,16 +758,16 @@ class BookingViewSet(viewsets.ModelViewSet):
                         "project_name": "Wedding",
                         "project_type": "event",
                         "client": {
-                                "id": "550e8400-e29b-41d4-a716-446655440000",
-                                "first_name": "John",
-                                "last_name": "Doe",
-                                "city": "Cleveland",
-                                "state": "OH",
-                                "zip_code": "44122",
-                                "email": "john.doe@example.com",
-                                "phone_number": "+12161231234",
-                                "created_at": "2026-05-21T10:00:00Z",
-                            },
+                            "id": "550e8400-e29b-41d4-a716-446655440000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "city": "Cleveland",
+                            "state": "OH",
+                            "zip_code": "44122",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+12161231234",
+                            "created_at": "2026-05-21T10:00:00Z",
+                        },
                         "created_at": "2026-05-21T10:15:00Z",
                     },
                     "date": "2026-06-16",
@@ -739,6 +776,7 @@ class BookingViewSet(viewsets.ModelViewSet):
                     "location": "Downtown Venue - Updated",
                     "created_at": "2026-05-21T10:30:00Z",
                 },
+                response_only=True,
                 status_codes=["200"],
             ),
             OpenApiExample(
@@ -799,6 +837,9 @@ class BookingViewSet(viewsets.ModelViewSet):
  
  
 class GalleryViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     serializer_class = GallerySerializer
  
     def get_queryset(self):
@@ -810,7 +851,7 @@ class GalleryViewSet(viewsets.ModelViewSet):
  
     @extend_schema(
         operation_id="list_galleries",
-        description="Retrieve a list of all galleries. Optionally filter by project_id query parameter. Returns an empty list if no projects match the filter.",
+        description="Retrieve a list of all galleries. Optionally filter by project_id query parameter.",
         responses={
             200: GallerySerializer(many=True),
             401: UnauthorizedSerializer,
@@ -864,13 +905,26 @@ class GalleryViewSet(viewsets.ModelViewSet):
     @extend_schema(
         operation_id="create_gallery",
         description="Create a new gallery for a project",
-        request=GallerySerializer,
+        request=GalleryCreateSerializer,
         responses={
             201: GallerySerializer,
             400: BadRequestSerializer,
             401: UnauthorizedSerializer,
         },
         examples=[
+            OpenApiExample(
+                name="Request",
+                description="Example gallery creation request",
+                value={
+                    "project_id": "660e8400-e29b-41d4-a716-446655440000",
+                    "gallery_name": "Reception Photos",
+                    "picture_count": 89,
+                    "is_visible": True,
+                    "url": "https://example.com/galleries/reception",
+                },
+                request_only=True,
+                status_codes=["201"],
+            ),
             OpenApiExample(
                 name="Successful Response",
                 description="Gallery created successfully",
@@ -881,16 +935,16 @@ class GalleryViewSet(viewsets.ModelViewSet):
                         "project_name": "Wedding",
                         "project_type": "event",
                         "client": {
-                                "id": "550e8400-e29b-41d4-a716-446655440000",
-                                "first_name": "John",
-                                "last_name": "Doe",
-                                "city": "Cleveland",
-                                "state": "OH",
-                                "zip_code": "44122",
-                                "email": "john.doe@example.com",
-                                "phone_number": "+12161231234",
-                                "created_at": "2026-05-21T10:00:00Z",
-                            },
+                            "id": "550e8400-e29b-41d4-a716-446655440000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "city": "Cleveland",
+                            "state": "OH",
+                            "zip_code": "44122",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+12161231234",
+                            "created_at": "2026-05-21T10:00:00Z",
+                        },
                         "created_at": "2026-05-21T10:15:00Z",
                     },
                     "gallery_name": "Reception Photos",
@@ -899,6 +953,7 @@ class GalleryViewSet(viewsets.ModelViewSet):
                     "url": "https://example.com/galleries/reception",
                     "created_at": "2026-05-21T10:35:00Z",
                 },
+                response_only=True,
                 status_codes=["201"],
             ),
             OpenApiExample(
@@ -940,16 +995,16 @@ class GalleryViewSet(viewsets.ModelViewSet):
                         "project_name": "Wedding",
                         "project_type": "event",
                         "client": {
-                                "id": "550e8400-e29b-41d4-a716-446655440000",
-                                "first_name": "John",
-                                "last_name": "Doe",
-                                "city": "Cleveland",
-                                "state": "OH",
-                                "zip_code": "44122",
-                                "email": "john.doe@example.com",
-                                "phone_number": "+12161231234",
-                                "created_at": "2026-05-21T10:00:00Z",
-                            },
+                            "id": "550e8400-e29b-41d4-a716-446655440000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "city": "Cleveland",
+                            "state": "OH",
+                            "zip_code": "44122",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+12161231234",
+                            "created_at": "2026-05-21T10:00:00Z",
+                        },
                         "created_at": "2026-05-21T10:15:00Z",
                     },
                     "gallery_name": "Ceremony Photos",
@@ -983,7 +1038,7 @@ class GalleryViewSet(viewsets.ModelViewSet):
     @extend_schema(
         operation_id="update_gallery",
         description="Update an existing gallery",
-        request=GallerySerializer,
+        request=GalleryCreateSerializer,
         responses={
             200: GallerySerializer,
             400: BadRequestSerializer,
@@ -1001,16 +1056,16 @@ class GalleryViewSet(viewsets.ModelViewSet):
                         "project_name": "Wedding",
                         "project_type": "event",
                         "client": {
-                                "id": "550e8400-e29b-41d4-a716-446655440000",
-                                "first_name": "John",
-                                "last_name": "Doe",
-                                "city": "Cleveland",
-                                "state": "OH",
-                                "zip_code": "44122",
-                                "email": "john.doe@example.com",
-                                "phone_number": "+12161231234",
-                                "created_at": "2026-05-21T10:00:00Z",
-                            },
+                            "id": "550e8400-e29b-41d4-a716-446655440000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "city": "Cleveland",
+                            "state": "OH",
+                            "zip_code": "44122",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+12161231234",
+                            "created_at": "2026-05-21T10:00:00Z",
+                        },
                         "created_at": "2026-05-21T10:15:00Z",
                     },
                     "gallery_name": "Ceremony Photos - Updated",
@@ -1019,6 +1074,7 @@ class GalleryViewSet(viewsets.ModelViewSet):
                     "url": "https://example.com/galleries/ceremony",
                     "created_at": "2026-05-21T10:35:00Z",
                 },
+                response_only=True,
                 status_codes=["200"],
             ),
             OpenApiExample(
