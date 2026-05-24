@@ -26,27 +26,27 @@ paths:
               examples:
                 SuccessfulResponse:
                   value:
-                  - - id: 770e8400-e29b-41d4-a716-446655440000
-                      project:
-                        id: 660e8400-e29b-41d4-a716-446655440000
-                        project_name: Wedding
-                        project_type: event
-                        client:
-                          id: 550e8400-e29b-41d4-a716-446655440000
-                          first_name: John
-                          last_name: Doe
-                          city: Cleveland
-                          state: OH
-                          zip_code: '44122'
-                          email: john.doe@example.com
-                          phone_number: '+12161231234'
-                          created_at: '2026-05-21T10:00:00Z'
-                        created_at: '2026-05-21T10:15:00Z'
-                      date: '2026-06-15'
-                      time: '14:00:00'
-                      duration: 480
-                      location: Downtown Venue
-                      created_at: '2026-05-21T10:30:00Z'
+                  - id: 770e8400-e29b-41d4-a716-446655440000
+                    project:
+                      id: 660e8400-e29b-41d4-a716-446655440000
+                      project_name: Wedding
+                      project_type: event
+                      client:
+                        id: 550e8400-e29b-41d4-a716-446655440000
+                        first_name: John
+                        last_name: Doe
+                        city: Cleveland
+                        state: OH
+                        zip_code: '44122'
+                        email: john.doe@example.com
+                        phone_number: '+12161231234'
+                        created_at: '2026-05-21T10:00:00Z'
+                      created_at: '2026-05-21T10:15:00Z'
+                    date: '2026-06-15'
+                    time: '14:00:00'
+                    duration: 480
+                    location: Downtown Venue
+                    created_at: '2026-05-21T10:30:00Z'
                   summary: Successful Response
                   description: List of bookings
           description: ''
@@ -1538,11 +1538,6 @@ components:
           - $ref: '#/components/schemas/Project'
           readOnly: true
           description: Project associated with this booking
-        project_id:
-          type: string
-          format: uuid
-          writeOnly: true
-          description: UUID of the project for this booking
         date:
           type: string
           format: date
@@ -1557,7 +1552,7 @@ components:
         location:
           type: string
           description: Booking location
-          maxLength: 20
+          maxLength: 30
         created_at:
           type: string
           format: date-time
@@ -1570,7 +1565,6 @@ components:
       - id
       - location
       - project
-      - project_id
       - time
     BookingCreate:
       type: object
@@ -1595,7 +1589,7 @@ components:
         location:
           type: string
           description: Booking location
-          maxLength: 20
+          maxLength: 30
       required:
       - date
       - duration
@@ -1613,15 +1607,15 @@ components:
         first_name:
           type: string
           description: Client's first name
-          maxLength: 20
+          maxLength: 30
         last_name:
           type: string
           description: Client's last name
-          maxLength: 20
+          maxLength: 30
         city:
           type: string
           description: City where client is located
-          maxLength: 20
+          maxLength: 30
         state:
           type: string
           description: State abbreviation (e.g., CA, NY)
@@ -1629,7 +1623,7 @@ components:
         zip_code:
           type: string
           description: Postal code for client's address
-          maxLength: 20
+          maxLength: 30
         email:
           type: string
           format: email
@@ -1660,15 +1654,15 @@ components:
         first_name:
           type: string
           description: Client's first name
-          maxLength: 20
+          maxLength: 30
         last_name:
           type: string
           description: Client's last name
-          maxLength: 20
+          maxLength: 30
         city:
           type: string
           description: City where client is located
-          maxLength: 20
+          maxLength: 30
         state:
           type: string
           description: State abbreviation (e.g., CA, NY)
@@ -1676,7 +1670,7 @@ components:
         zip_code:
           type: string
           description: Postal code for client's address
-          maxLength: 20
+          maxLength: 30
         email:
           type: string
           format: email
@@ -1705,11 +1699,6 @@ components:
           - $ref: '#/components/schemas/Project'
           readOnly: true
           description: Project associated with this gallery
-        project_id:
-          type: string
-          format: uuid
-          writeOnly: true
-          description: UUID of the project for this gallery
         gallery_name:
           type: string
           description: Name of the gallery
@@ -1736,7 +1725,6 @@ components:
       - is_visible
       - picture_count
       - project
-      - project_id
       - url
     GalleryCreate:
       type: object
@@ -1787,11 +1775,6 @@ components:
           - $ref: '#/components/schemas/Project'
           readOnly: true
           description: Project associated with this booking
-        project_id:
-          type: string
-          format: uuid
-          writeOnly: true
-          description: UUID of the project for this booking
         date:
           type: string
           format: date
@@ -1806,7 +1789,7 @@ components:
         location:
           type: string
           description: Booking location
-          maxLength: 20
+          maxLength: 30
         created_at:
           type: string
           format: date-time
@@ -1823,15 +1806,15 @@ components:
         first_name:
           type: string
           description: Client's first name
-          maxLength: 20
+          maxLength: 30
         last_name:
           type: string
           description: Client's last name
-          maxLength: 20
+          maxLength: 30
         city:
           type: string
           description: City where client is located
-          maxLength: 20
+          maxLength: 30
         state:
           type: string
           description: State abbreviation (e.g., CA, NY)
@@ -1839,7 +1822,7 @@ components:
         zip_code:
           type: string
           description: Postal code for client's address
-          maxLength: 20
+          maxLength: 30
         email:
           type: string
           format: email
@@ -1865,11 +1848,6 @@ components:
           - $ref: '#/components/schemas/Project'
           readOnly: true
           description: Project associated with this gallery
-        project_id:
-          type: string
-          format: uuid
-          writeOnly: true
-          description: UUID of the project for this gallery
         gallery_name:
           type: string
           description: Name of the gallery
@@ -1900,7 +1878,7 @@ components:
         project_name:
           type: string
           description: Name of the project
-          maxLength: 20
+          maxLength: 30
         project_type:
           allOf:
           - $ref: '#/components/schemas/ProjectTypeEnum'
@@ -1915,11 +1893,6 @@ components:
           - $ref: '#/components/schemas/Client'
           readOnly: true
           description: Client associated with this project
-        client_id:
-          type: string
-          format: uuid
-          writeOnly: true
-          description: UUID of the client for this project
         created_at:
           type: string
           format: date-time
@@ -1936,7 +1909,7 @@ components:
         project_name:
           type: string
           description: Name of the project
-          maxLength: 20
+          maxLength: 30
         project_type:
           allOf:
           - $ref: '#/components/schemas/ProjectTypeEnum'
@@ -1951,11 +1924,6 @@ components:
           - $ref: '#/components/schemas/Client'
           readOnly: true
           description: Client associated with this project
-        client_id:
-          type: string
-          format: uuid
-          writeOnly: true
-          description: UUID of the client for this project
         created_at:
           type: string
           format: date-time
@@ -1963,7 +1931,6 @@ components:
           description: When the project was created
       required:
       - client
-      - client_id
       - created_at
       - id
       - project_name
@@ -1976,7 +1943,7 @@ components:
         project_name:
           type: string
           description: Name of the project
-          maxLength: 20
+          maxLength: 30
         project_type:
           allOf:
           - $ref: '#/components/schemas/ProjectTypeEnum'
