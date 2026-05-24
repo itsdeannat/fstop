@@ -1,0 +1,19 @@
+workflowVersion: 1.0.0
+speakeasyVersion: latest
+sources:
+    fstop-oas:
+        inputs:
+            - location: schema.yml
+        registry:
+            location: registry.speakeasyapi.dev/fstop/fstop-api/fstop-oas
+targets:
+    fstop-python-sdk:
+        target: python
+        source: fstop-oas
+        output: ../fstop-sdk-python
+        codeSamples:
+            registry:
+                location: registry.speakeasyapi.dev/fstop/fstop-api/fstop-oas-python-code-samples
+            labelOverride:
+                fixedValue: Python (SDK)
+            blocking: false

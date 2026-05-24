@@ -562,8 +562,7 @@ class BookingViewSet(viewsets.ModelViewSet):
             OpenApiExample(
                 name="Successful Response",
                 description="List of bookings",
-                value=[
-                    {
+                value={
                         "id": "770e8400-e29b-41d4-a716-446655440000",
                         "project": {
                             "id": "660e8400-e29b-41d4-a716-446655440000",
@@ -588,7 +587,6 @@ class BookingViewSet(viewsets.ModelViewSet):
                         "location": "Downtown Venue",
                         "created_at": "2026-05-21T10:30:00Z",
                     },
-                ],
                 status_codes=["200"],
             ),
             OpenApiExample(

@@ -1,0 +1,37 @@
+speakeasyVersion: 1.764.1
+sources:
+    fstop-oas:
+        sourceNamespace: fstop-oas
+        sourceRevisionDigest: sha256:6f9ac6fd829a35eff5f24a13378bd2135823fc49b92c30668ad38b48e8ae7316
+        sourceBlobDigest: sha256:b8b21cca599eeb0c44909c84be5aff1632b7ea36e7c08234f2ebfbe516ea1570
+        tags:
+            - latest
+            - 1.0.0
+targets:
+    fstop-python-sdk:
+        source: fstop-oas
+        sourceNamespace: fstop-oas
+        sourceRevisionDigest: sha256:6f9ac6fd829a35eff5f24a13378bd2135823fc49b92c30668ad38b48e8ae7316
+        sourceBlobDigest: sha256:b8b21cca599eeb0c44909c84be5aff1632b7ea36e7c08234f2ebfbe516ea1570
+        codeSamplesNamespace: fstop-oas-python-code-samples
+        codeSamplesRevisionDigest: sha256:4aa74c157a681873b1e3a27bacafa3cb687f57faf4fe9f445ba9dce41417d95c
+workflow:
+    workflowVersion: 1.0.0
+    speakeasyVersion: latest
+    sources:
+        fstop-oas:
+            inputs:
+                - location: schema.yml
+            registry:
+                location: registry.speakeasyapi.dev/fstop/fstop-api/fstop-oas
+    targets:
+        fstop-python-sdk:
+            target: python
+            source: fstop-oas
+            output: ../fstop-sdk-python
+            codeSamples:
+                registry:
+                    location: registry.speakeasyapi.dev/fstop/fstop-api/fstop-oas-python-code-samples
+                labelOverride:
+                    fixedValue: Python (SDK)
+                blocking: false
