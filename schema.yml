@@ -1648,6 +1648,11 @@ components:
           format: uuid
           readOnly: true
           description: Unique identifier for the booking
+        project_id:
+          type: string
+          format: uuid
+          writeOnly: true
+          description: UUID of the project for this booking
         project:
           allOf:
           - $ref: '#/components/schemas/Project'
@@ -1680,6 +1685,7 @@ components:
       - id
       - location
       - project
+      - project_id
       - time
     BookingCreate:
       type: object
@@ -1809,11 +1815,16 @@ components:
           format: uuid
           readOnly: true
           description: Unique identifier for the gallery
-        project:
+        booking:
           allOf:
-          - $ref: '#/components/schemas/Project'
+          - $ref: '#/components/schemas/Booking'
           readOnly: true
-          description: Project associated with this gallery
+          description: Booking associated with this gallery
+        booking_id:
+          type: string
+          format: uuid
+          writeOnly: true
+          description: UUID of the booking for this gallery
         gallery_name:
           type: string
           description: Name of the gallery
@@ -1834,12 +1845,13 @@ components:
           readOnly: true
           description: Timestamp when gallery was created
       required:
+      - booking
+      - booking_id
       - created_at
       - gallery_name
       - id
       - is_visible
       - picture_count
-      - project
       - url
     GalleryCreate:
       type: object
@@ -2000,10 +2012,14 @@ components:
             * `portrait` - portrait
             * `party` - party
         client:
-          allOf:
-          - $ref: '#/components/schemas/Client'
-          readOnly: true
+          type: string
+          format: uuid
           description: Client associated with this project
+        client_id:
+          type: string
+          format: uuid
+          writeOnly: true
+          description: UUID of the client for this project
         created_at:
           type: string
           format: date-time
@@ -2011,6 +2027,7 @@ components:
           description: When the project was created
       required:
       - client
+      - client_id
       - created_at
       - id
       - project_name
