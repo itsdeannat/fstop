@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .models import Client, Project, Booking, Gallery
 from .serializers import (
     ClientSerializer,
@@ -19,11 +21,9 @@ from .serializers import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from drf_spectacular.utils import extend_schema, OpenApiExample, OpenApiRequest
-from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiExample, OpenApiResponse
 
 # Create your views here.
-
 
 class ClientViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
@@ -31,13 +31,14 @@ class ClientViewSet(viewsets.ModelViewSet):
     
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
- 
+
     @extend_schema(
         operation_id="list_clients",
-        description="Get a list of all clients",
+        summary="List all clients",
+        description="Retrieve a list of all clients in the system.",
         responses={
-            200: ClientSerializer(many=True),
-            401: UnauthorizedSerializer,
+            200: OpenApiResponse(response=ClientSerializer(many=True), description="List of clients retrieved successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
         },
         examples=[
             OpenApiExample(
@@ -81,15 +82,16 @@ class ClientViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         """Get all clients"""
         return super().list(request, *args, **kwargs)
- 
+
     @extend_schema(
         operation_id="create_client",
-        description="Create a new client",
+        summary="Create a client",
+        description="Create a new client.",
         request=ClientCreateSerializer,
         responses={
-            201: ClientSerializer,
-            400: BadRequestSerializer,
-            401: UnauthorizedSerializer,
+            201: OpenApiResponse(response=ClientSerializer, description="Client created successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
         },
         examples=[
             OpenApiExample(
@@ -143,14 +145,15 @@ class ClientViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         """Create a new client"""
         return super().create(request, *args, **kwargs)
- 
+
     @extend_schema(
         operation_id="retrieve_client",
-        description="Retrieve a single client by ID",
+        summary="Retrieve a client",
+        description="Get a specific client by ID.",
         responses={
-            200: ClientSerializer,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            200: OpenApiResponse(response=ClientSerializer, description="Client retrieved successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Client not found"),
         },
         examples=[
             OpenApiExample(
@@ -188,16 +191,17 @@ class ClientViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         """Get a single client by ID"""
         return super().retrieve(request, pk=pk)
- 
+
     @extend_schema(
         operation_id="update_client",
-        description="Update an existing client",
+        summary="Update a client",
+        description="Update an existing client.",
         request=ClientCreateSerializer,
         responses={
-            200: ClientSerializer,
-            400: BadRequestSerializer,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            200: OpenApiResponse(response=ClientSerializer, description="Client updated successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Client not found"),
         },
         examples=[
             OpenApiExample(
@@ -243,14 +247,31 @@ class ClientViewSet(viewsets.ModelViewSet):
     def update(self, request, pk=None):
         """Update an existing client"""
         return super().update(request, pk=pk)
- 
+
+    @extend_schema(
+        operation_id="partially_update_client",
+        summary="Partially update a client",
+        description="Partially update an existing client.",
+        request=ClientCreateSerializer,
+        responses={
+            200: OpenApiResponse(response=ClientSerializer, description="Client partially updated successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Client not found"),
+        },
+    )
+    def partial_update(self, request, pk=None):
+        """Partially update an existing client"""
+        return super().partial_update(request, pk=pk)
+
     @extend_schema(
         operation_id="delete_client",
-        description="Delete a client",
+        summary="Delete a client",
+        description="Delete a client by ID.",
         responses={
-            204: None,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            204: OpenApiResponse(description="Client deleted successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Client not found"),
         },
         examples=[
             OpenApiExample(
@@ -272,27 +293,28 @@ class ClientViewSet(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         """Delete a client"""
         return super().destroy(request, pk=pk)
- 
- 
+
+
 class ProjectViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     
     serializer_class = ProjectSerializer
- 
+
     def get_queryset(self):
         queryset = Project.objects.all()
         client_id = self.request.query_params.get('client_id')
         if client_id:
             queryset = queryset.filter(client_id=client_id)
         return queryset
- 
+
     @extend_schema(
         operation_id="list_projects",
-        description="Retrieve a list of all projects. Optionally filter by client_id query parameter.",
+        summary="List all projects",
+        description="Retrieve a list of all projects. Optionally filter by client_id.",
         responses={
-            200: ProjectSerializer(many=True),
-            401: UnauthorizedSerializer,
+            200: OpenApiResponse(response=ProjectSerializer(many=True), description="List of projects retrieved successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
         },
         examples=[
             OpenApiExample(
@@ -331,15 +353,16 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         """Get all projects, optionally filtered by client_id"""
         return super().list(request, *args, **kwargs)
- 
+
     @extend_schema(
         operation_id="create_project",
-        description="Create a new project for a client",
+        summary="Create a project",
+        description="Create a new project for a client.",
         request=ProjectCreateSerializer,
         responses={
-            201: ProjectSerializer,
-            400: BadRequestSerializer,
-            401: UnauthorizedSerializer,
+            201: OpenApiResponse(response=ProjectSerializer, description="Project created successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
         },
         examples=[
             OpenApiExample(
@@ -395,14 +418,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         """Create a new project"""
         return super().create(request, *args, **kwargs)
- 
+
     @extend_schema(
         operation_id="retrieve_project",
-        description="Retrieve a single project by ID",
+        summary="Retrieve a project",
+        description="Get a specific project by ID.",
         responses={
-            200: ProjectSerializer,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            200: OpenApiResponse(response=ProjectSerializer, description="Project retrieved successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Project not found"),
         },
         examples=[
             OpenApiExample(
@@ -446,16 +470,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         """Get a single project by ID"""
         return super().retrieve(request, pk=pk)
- 
+
     @extend_schema(
         operation_id="update_project",
-        description="Update an existing project",
+        summary="Update a project",
+        description="Update an existing project.",
         request=ProjectCreateSerializer,
         responses={
-            200: ProjectSerializer,
-            400: BadRequestSerializer,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            200: OpenApiResponse(response=ProjectSerializer, description="Project updated successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Project not found"),
         },
         examples=[
             OpenApiExample(
@@ -507,14 +532,31 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def update(self, request, pk=None):
         """Update an existing project"""
         return super().update(request, pk=pk)
- 
+
+    @extend_schema(
+        operation_id="partially_update_project",
+        summary="Partially update a project",
+        description="Partially update an existing project.",
+        request=ProjectCreateSerializer,
+        responses={
+            200: OpenApiResponse(response=ProjectSerializer, description="Project partially updated successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Project not found"),
+        },
+    )
+    def partial_update(self, request, pk=None):
+        """Partially update an existing project"""
+        return super().partial_update(request, pk=pk)
+
     @extend_schema(
         operation_id="delete_project",
-        description="Delete a project",
+        summary="Delete a project",
+        description="Delete a project by ID.",
         responses={
-            204: None,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            204: OpenApiResponse(description="Project deleted successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Project not found"),
         },
         examples=[
             OpenApiExample(
@@ -536,33 +578,35 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         """Delete a project"""
         return super().destroy(request, pk=pk)
- 
- 
+
+
 class BookingViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     
     serializer_class = BookingSerializer
- 
+
     def get_queryset(self):
         queryset = Booking.objects.all()
         project_id = self.request.query_params.get('project_id')
         if project_id:
             queryset = queryset.filter(project_id=project_id)
         return queryset
- 
+
     @extend_schema(
         operation_id="list_bookings",
-        description="Retrieve a list of all bookings. Optionally filter by project_id query parameter.",
+        summary="List all bookings",
+        description="Retrieve a list of all bookings. Optionally filter by project_id.",
         responses={
-            200: BookingSerializer(many=True),
-            401: UnauthorizedSerializer,
+            200: OpenApiResponse(response=BookingSerializer(many=True), description="List of bookings retrieved successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
         },
         examples=[
             OpenApiExample(
                 name="Successful Response",
                 description="List of bookings",
-                value={
+                value=[
+                    {
                         "id": "770e8400-e29b-41d4-a716-446655440000",
                         "project": {
                             "id": "660e8400-e29b-41d4-a716-446655440000",
@@ -587,6 +631,7 @@ class BookingViewSet(viewsets.ModelViewSet):
                         "location": "Downtown Venue",
                         "created_at": "2026-05-21T10:30:00Z",
                     },
+                ],
                 status_codes=["200"],
             ),
             OpenApiExample(
@@ -601,15 +646,16 @@ class BookingViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         """Get all bookings, optionally filtered by project_id"""
         return super().list(request, *args, **kwargs)
- 
+
     @extend_schema(
         operation_id="create_booking",
-        description="Create a new booking for a project",
+        summary="Create a booking",
+        description="Create a new booking for a project.",
         request=BookingCreateSerializer,
         responses={
-            201: BookingSerializer,
-            400: BadRequestSerializer,
-            401: UnauthorizedSerializer,
+            201: OpenApiResponse(response=BookingSerializer, description="Booking created successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
         },
         examples=[
             OpenApiExample(
@@ -675,14 +721,15 @@ class BookingViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         """Create a new booking"""
         return super().create(request, *args, **kwargs)
- 
+
     @extend_schema(
         operation_id="retrieve_booking",
-        description="Retrieve a single booking by ID",
+        summary="Retrieve a booking",
+        description="Get a specific booking by ID.",
         responses={
-            200: BookingSerializer,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            200: OpenApiResponse(response=BookingSerializer, description="Booking retrieved successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Booking not found"),
         },
         examples=[
             OpenApiExample(
@@ -734,16 +781,17 @@ class BookingViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         """Get a single booking by ID"""
         return super().retrieve(request, pk=pk)
- 
+
     @extend_schema(
         operation_id="update_booking",
-        description="Update an existing booking",
+        summary="Update a booking",
+        description="Update an existing booking.",
         request=BookingCreateSerializer,
         responses={
-            200: BookingSerializer,
-            400: BadRequestSerializer,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            200: OpenApiResponse(response=BookingSerializer, description="Booking updated successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Booking not found"),
         },
         examples=[
             OpenApiExample(
@@ -803,14 +851,31 @@ class BookingViewSet(viewsets.ModelViewSet):
     def update(self, request, pk=None):
         """Update an existing booking"""
         return super().update(request, pk=pk)
- 
+
+    @extend_schema(
+        operation_id="partially_update_booking",
+        summary="Partially update a booking",
+        description="Partially update an existing booking.",
+        request=BookingCreateSerializer,
+        responses={
+            200: OpenApiResponse(response=BookingSerializer, description="Booking partially updated successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Booking not found"),
+        },
+    )
+    def partial_update(self, request, pk=None):
+        """Partially update an existing booking"""
+        return super().partial_update(request, pk=pk)
+
     @extend_schema(
         operation_id="delete_booking",
-        description="Delete a booking",
+        summary="Delete a booking",
+        description="Delete a booking by ID.",
         responses={
-            204: None,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            204: OpenApiResponse(description="Booking deleted successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Booking not found"),
         },
         examples=[
             OpenApiExample(
@@ -832,27 +897,28 @@ class BookingViewSet(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         """Delete a booking"""
         return super().destroy(request, pk=pk)
- 
- 
+
+
 class GalleryViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     
     serializer_class = GallerySerializer
- 
+
     def get_queryset(self):
         queryset = Gallery.objects.all()
         project_id = self.request.query_params.get('project_id')
         if project_id:
             queryset = queryset.filter(project_id=project_id)
         return queryset
- 
+
     @extend_schema(
         operation_id="list_galleries",
-        description="Retrieve a list of all galleries. Optionally filter by project_id query parameter.",
+        summary="List all galleries",
+        description="Retrieve a list of all galleries. Optionally filter by project_id.",
         responses={
-            200: GallerySerializer(many=True),
-            401: UnauthorizedSerializer,
+            200: OpenApiResponse(response=GallerySerializer(many=True), description="List of galleries retrieved successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
         },
         examples=[
             OpenApiExample(
@@ -899,15 +965,16 @@ class GalleryViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         """Get all galleries, optionally filtered by project_id"""
         return super().list(request, *args, **kwargs)
- 
+
     @extend_schema(
         operation_id="create_gallery",
-        description="Create a new gallery for a project",
+        summary="Create a gallery",
+        description="Create a new gallery for a project.",
         request=GalleryCreateSerializer,
         responses={
-            201: GallerySerializer,
-            400: BadRequestSerializer,
-            401: UnauthorizedSerializer,
+            201: OpenApiResponse(response=GallerySerializer, description="Gallery created successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
         },
         examples=[
             OpenApiExample(
@@ -973,14 +1040,15 @@ class GalleryViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         """Create a new gallery"""
         return super().create(request, *args, **kwargs)
- 
+
     @extend_schema(
         operation_id="retrieve_gallery",
-        description="Retrieve a single gallery by ID",
+        summary="Retrieve a gallery",
+        description="Get a specific gallery by ID.",
         responses={
-            200: GallerySerializer,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            200: OpenApiResponse(response=GallerySerializer, description="Gallery retrieved successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Gallery not found"),
         },
         examples=[
             OpenApiExample(
@@ -1032,16 +1100,17 @@ class GalleryViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         """Get a single gallery by ID"""
         return super().retrieve(request, pk=pk)
- 
+
     @extend_schema(
         operation_id="update_gallery",
-        description="Update an existing gallery",
+        summary="Update a gallery",
+        description="Update an existing gallery.",
         request=GalleryCreateSerializer,
         responses={
-            200: GallerySerializer,
-            400: BadRequestSerializer,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            200: OpenApiResponse(response=GallerySerializer, description="Gallery updated successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Gallery not found"),
         },
         examples=[
             OpenApiExample(
@@ -1101,14 +1170,31 @@ class GalleryViewSet(viewsets.ModelViewSet):
     def update(self, request, pk=None):
         """Update an existing gallery"""
         return super().update(request, pk=pk)
- 
+
+    @extend_schema(
+        operation_id="partially_update_gallery",
+        summary="Partially update a gallery",
+        description="Partially update an existing gallery.",
+        request=GalleryCreateSerializer,
+        responses={
+            200: OpenApiResponse(response=GallerySerializer, description="Gallery partially updated successfully"),
+            400: OpenApiResponse(response=BadRequestSerializer, description="Invalid request data"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Gallery not found"),
+        },
+    )
+    def partial_update(self, request, pk=None):
+        """Partially update an existing gallery"""
+        return super().partial_update(request, pk=pk)
+
     @extend_schema(
         operation_id="delete_gallery",
-        description="Delete a gallery",
+        summary="Delete a gallery",
+        description="Delete a gallery by ID.",
         responses={
-            204: None,
-            401: UnauthorizedSerializer,
-            404: NotFoundSerializer,
+            204: OpenApiResponse(description="Gallery deleted successfully"),
+            401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
+            404: OpenApiResponse(response=NotFoundSerializer, description="Gallery not found"),
         },
         examples=[
             OpenApiExample(
@@ -1130,3 +1216,38 @@ class GalleryViewSet(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         """Delete a gallery"""
         return super().destroy(request, pk=pk)
+    
+@extend_schema_view(
+    post=extend_schema(
+        operation_id="obtain_token",
+        summary="Obtain JWT token",
+        description="Authenticate and obtain access and refresh tokens.",
+        request=TokenObtainPairSerializer,
+        responses={
+            200: OpenApiResponse({"type": "object", "properties": {
+                "access": {"type": "string"},
+                "refresh": {"type": "string"}
+            }}, description="Successfully obtained JWT token"),
+            400: OpenApiResponse(response=UnauthorizedSerializer, description="Invalid username or password")
+        },
+    )
+)
+class CustomTokenObtainPairView(TokenObtainPairView):
+    pass
+
+@extend_schema_view(
+    post=extend_schema(
+        operation_id="refresh_token",
+        summary="Refresh JWT token",
+        description="Refresh an expired access token using a refresh token.",
+        request=TokenRefreshSerializer,
+        responses={
+            200: OpenApiResponse({"type": "object", "properties": {
+                "access": {"type": "string"}
+            }}, description="Successfully refreshed token"),
+            400: OpenApiResponse(response=UnauthorizedSerializer, description="Invalid refresh token")
+        },
+    )
+)
+class CustomTokenRefreshView(TokenRefreshView):
+    pass

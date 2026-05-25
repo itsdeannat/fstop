@@ -2,8 +2,8 @@ speakeasyVersion: 1.764.1
 sources:
     fstop-oas:
         sourceNamespace: fstop-oas
-        sourceRevisionDigest: sha256:6f9ac6fd829a35eff5f24a13378bd2135823fc49b92c30668ad38b48e8ae7316
-        sourceBlobDigest: sha256:b8b21cca599eeb0c44909c84be5aff1632b7ea36e7c08234f2ebfbe516ea1570
+        sourceRevisionDigest: sha256:6b4a0cdf5f45536a6bb4a1170e464cba9feee48c809c6d0544884c9786ee2a59
+        sourceBlobDigest: sha256:7520d4a02f73a1a18c25c35928eae7d4a2ebad0f6c6a16865cec54d0f15c378a
         tags:
             - latest
             - 1.0.0
@@ -11,10 +11,10 @@ targets:
     fstop-python-sdk:
         source: fstop-oas
         sourceNamespace: fstop-oas
-        sourceRevisionDigest: sha256:6f9ac6fd829a35eff5f24a13378bd2135823fc49b92c30668ad38b48e8ae7316
-        sourceBlobDigest: sha256:b8b21cca599eeb0c44909c84be5aff1632b7ea36e7c08234f2ebfbe516ea1570
+        sourceRevisionDigest: sha256:6b4a0cdf5f45536a6bb4a1170e464cba9feee48c809c6d0544884c9786ee2a59
+        sourceBlobDigest: sha256:7520d4a02f73a1a18c25c35928eae7d4a2ebad0f6c6a16865cec54d0f15c378a
         codeSamplesNamespace: fstop-oas-python-code-samples
-        codeSamplesRevisionDigest: sha256:4aa74c157a681873b1e3a27bacafa3cb687f57faf4fe9f445ba9dce41417d95c
+        codeSamplesRevisionDigest: sha256:2c871ce711aaed64f35bc19611ab9e983b6052ed77d05e39897d001dbc52388b
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
