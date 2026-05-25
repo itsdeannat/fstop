@@ -9,8 +9,8 @@ paths:
   /api/bookings/:
     get:
       operationId: list_bookings
-      description: Retrieve a list of all bookings. Optionally filter by project_id
-        query parameter.
+      description: Retrieve a list of all bookings. Optionally filter by project_id.
+      summary: List all bookings
       tags:
       - bookings
       security:
@@ -26,30 +26,30 @@ paths:
               examples:
                 SuccessfulResponse:
                   value:
-                  - id: 770e8400-e29b-41d4-a716-446655440000
-                    project:
-                      id: 660e8400-e29b-41d4-a716-446655440000
-                      project_name: Wedding
-                      project_type: event
-                      client:
-                        id: 550e8400-e29b-41d4-a716-446655440000
-                        first_name: John
-                        last_name: Doe
-                        city: Cleveland
-                        state: OH
-                        zip_code: '44122'
-                        email: john.doe@example.com
-                        phone_number: '+12161231234'
-                        created_at: '2026-05-21T10:00:00Z'
-                      created_at: '2026-05-21T10:15:00Z'
-                    date: '2026-06-15'
-                    time: '14:00:00'
-                    duration: 480
-                    location: Downtown Venue
-                    created_at: '2026-05-21T10:30:00Z'
+                  - - id: 770e8400-e29b-41d4-a716-446655440000
+                      project:
+                        id: 660e8400-e29b-41d4-a716-446655440000
+                        project_name: Wedding
+                        project_type: event
+                        client:
+                          id: 550e8400-e29b-41d4-a716-446655440000
+                          first_name: John
+                          last_name: Doe
+                          city: Cleveland
+                          state: OH
+                          zip_code: '44122'
+                          email: john.doe@example.com
+                          phone_number: '+12161231234'
+                          created_at: '2026-05-21T10:00:00Z'
+                        created_at: '2026-05-21T10:15:00Z'
+                      date: '2026-06-15'
+                      time: '14:00:00'
+                      duration: 480
+                      location: Downtown Venue
+                      created_at: '2026-05-21T10:30:00Z'
                   summary: Successful Response
                   description: List of bookings
-          description: ''
+          description: List of bookings retrieved successfully
         '401':
           content:
             application/json:
@@ -60,10 +60,11 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
     post:
       operationId: create_booking
-      description: Create a new booking for a project
+      description: Create a new booking for a project.
+      summary: Create a booking
       tags:
       - bookings
       requestBody:
@@ -121,7 +122,7 @@ paths:
                     created_at: '2026-05-21T10:30:00Z'
                   summary: Successful Response
                   description: Booking created successfully
-          description: ''
+          description: Booking created successfully
         '400':
           content:
             application/json:
@@ -134,7 +135,7 @@ paths:
                     - Ensure this value is greater than or equal to 0.
                   summary: Bad Request
                   description: Invalid booking data provided
-          description: ''
+          description: Invalid request data
         '401':
           content:
             application/json:
@@ -145,11 +146,12 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
   /api/bookings/{id}/:
     get:
       operationId: retrieve_booking
-      description: Retrieve a single booking by ID
+      description: Get a specific booking by ID.
+      summary: Retrieve a booking
       parameters:
       - in: path
         name: id
@@ -194,7 +196,7 @@ paths:
                     created_at: '2026-05-21T10:30:00Z'
                   summary: Successful Response
                   description: Single booking details
-          description: ''
+          description: Booking retrieved successfully
         '401':
           content:
             application/json:
@@ -205,7 +207,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -217,10 +219,11 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Booking does not exist
-          description: ''
+          description: Booking not found
     put:
       operationId: update_booking
-      description: Update an existing booking
+      description: Update an existing booking.
+      summary: Update a booking
       parameters:
       - in: path
         name: id
@@ -277,7 +280,7 @@ paths:
                     created_at: '2026-05-21T10:30:00Z'
                   summary: Successful Response
                   description: Booking updated successfully
-          description: ''
+          description: Booking updated successfully
         '400':
           content:
             application/json:
@@ -290,7 +293,7 @@ paths:
                     - Ensure this value is greater than or equal to 0.
                   summary: Bad Request
                   description: Invalid booking data provided
-          description: ''
+          description: Invalid request data
         '401':
           content:
             application/json:
@@ -301,7 +304,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -313,9 +316,11 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Booking does not exist
-          description: ''
+          description: Booking not found
     patch:
-      operationId: bookings_partial_update
+      operationId: partially_update_booking
+      description: Partially update an existing booking.
+      summary: Partially update a booking
       parameters:
       - in: path
         name: id
@@ -330,13 +335,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedBooking'
+              $ref: '#/components/schemas/PatchedBookingCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedBooking'
+              $ref: '#/components/schemas/PatchedBookingCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedBooking'
+              $ref: '#/components/schemas/PatchedBookingCreate'
       security:
       - jwtAuth: []
       responses:
@@ -345,10 +350,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Booking'
-          description: ''
+          description: Booking partially updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Booking not found
     delete:
       operationId: delete_booking
-      description: Delete a booking
+      description: Delete a booking by ID.
+      summary: Delete a booking
       parameters:
       - in: path
         name: id
@@ -363,7 +387,7 @@ paths:
       - jwtAuth: []
       responses:
         '204':
-          description: No response body
+          description: Booking deleted successfully
         '401':
           content:
             application/json:
@@ -374,7 +398,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -386,11 +410,12 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Booking does not exist
-          description: ''
+          description: Booking not found
   /api/clients/:
     get:
       operationId: list_clients
-      description: Get a list of all clients
+      description: Retrieve a list of all clients in the system.
+      summary: List all clients
       tags:
       - clients
       security:
@@ -426,7 +451,7 @@ paths:
                       created_at: '2026-05-21T10:05:00Z'
                   summary: Successful Response
                   description: List of clients
-          description: ''
+          description: List of clients retrieved successfully
         '401':
           content:
             application/json:
@@ -437,10 +462,11 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
     post:
       operationId: create_client
-      description: Create a new client
+      description: Create a new client.
+      summary: Create a client
       tags:
       - clients
       requestBody:
@@ -488,7 +514,7 @@ paths:
                     created_at: '2026-05-21T10:10:00Z'
                   summary: Successful Response
                   description: Client created successfully
-          description: ''
+          description: Client created successfully
         '400':
           content:
             application/json:
@@ -501,7 +527,7 @@ paths:
                     - Enter a valid email address.
                   summary: Bad Request
                   description: Invalid client data provided
-          description: ''
+          description: Invalid request data
         '401':
           content:
             application/json:
@@ -512,11 +538,12 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
   /api/clients/{id}/:
     get:
       operationId: retrieve_client
-      description: Retrieve a single client by ID
+      description: Get a specific client by ID.
+      summary: Retrieve a client
       parameters:
       - in: path
         name: id
@@ -549,7 +576,7 @@ paths:
                     created_at: '2026-05-21T10:00:00Z'
                   summary: Successful Response
                   description: Single client details
-          description: ''
+          description: Client retrieved successfully
         '401':
           content:
             application/json:
@@ -560,7 +587,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -572,10 +599,11 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Client does not exist
-          description: ''
+          description: Client not found
     put:
       operationId: update_client
-      description: Update an existing client
+      description: Update an existing client.
+      summary: Update a client
       parameters:
       - in: path
         name: id
@@ -620,7 +648,7 @@ paths:
                     created_at: '2026-05-21T10:00:00Z'
                   summary: Successful Response
                   description: Client updated successfully
-          description: ''
+          description: Client updated successfully
         '400':
           content:
             application/json:
@@ -633,7 +661,7 @@ paths:
                     - Enter a valid email address.
                   summary: Bad Request
                   description: Invalid client data provided
-          description: ''
+          description: Invalid request data
         '401':
           content:
             application/json:
@@ -644,7 +672,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -656,9 +684,11 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Client does not exist
-          description: ''
+          description: Client not found
     patch:
-      operationId: clients_partial_update
+      operationId: partially_update_client
+      description: Partially update an existing client.
+      summary: Partially update a client
       parameters:
       - in: path
         name: id
@@ -673,13 +703,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedClient'
+              $ref: '#/components/schemas/PatchedClientCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedClient'
+              $ref: '#/components/schemas/PatchedClientCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedClient'
+              $ref: '#/components/schemas/PatchedClientCreate'
       security:
       - jwtAuth: []
       responses:
@@ -688,10 +718,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Client'
-          description: ''
+          description: Client partially updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Client not found
     delete:
       operationId: delete_client
-      description: Delete a client
+      description: Delete a client by ID.
+      summary: Delete a client
       parameters:
       - in: path
         name: id
@@ -706,7 +755,7 @@ paths:
       - jwtAuth: []
       responses:
         '204':
-          description: No response body
+          description: Client deleted successfully
         '401':
           content:
             application/json:
@@ -717,7 +766,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -729,12 +778,12 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Client does not exist
-          description: ''
+          description: Client not found
   /api/galleries/:
     get:
       operationId: list_galleries
-      description: Retrieve a list of all galleries. Optionally filter by project_id
-        query parameter.
+      description: Retrieve a list of all galleries. Optionally filter by project_id.
+      summary: List all galleries
       tags:
       - galleries
       security:
@@ -773,7 +822,7 @@ paths:
                       created_at: '2026-05-21T10:35:00Z'
                   summary: Successful Response
                   description: List of galleries
-          description: ''
+          description: List of galleries retrieved successfully
         '401':
           content:
             application/json:
@@ -784,10 +833,11 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
     post:
       operationId: create_gallery
-      description: Create a new gallery for a project
+      description: Create a new gallery for a project.
+      summary: Create a gallery
       tags:
       - galleries
       requestBody:
@@ -845,7 +895,7 @@ paths:
                     created_at: '2026-05-21T10:35:00Z'
                   summary: Successful Response
                   description: Gallery created successfully
-          description: ''
+          description: Gallery created successfully
         '400':
           content:
             application/json:
@@ -858,7 +908,7 @@ paths:
                     - Enter a valid URL.
                   summary: Bad Request
                   description: Invalid gallery data provided
-          description: ''
+          description: Invalid request data
         '401':
           content:
             application/json:
@@ -869,11 +919,12 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
   /api/galleries/{id}/:
     get:
       operationId: retrieve_gallery
-      description: Retrieve a single gallery by ID
+      description: Get a specific gallery by ID.
+      summary: Retrieve a gallery
       parameters:
       - in: path
         name: id
@@ -918,7 +969,7 @@ paths:
                     created_at: '2026-05-21T10:35:00Z'
                   summary: Successful Response
                   description: Single gallery details
-          description: ''
+          description: Gallery retrieved successfully
         '401':
           content:
             application/json:
@@ -929,7 +980,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -941,10 +992,11 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Gallery does not exist
-          description: ''
+          description: Gallery not found
     put:
       operationId: update_gallery
-      description: Update an existing gallery
+      description: Update an existing gallery.
+      summary: Update a gallery
       parameters:
       - in: path
         name: id
@@ -1001,7 +1053,7 @@ paths:
                     created_at: '2026-05-21T10:35:00Z'
                   summary: Successful Response
                   description: Gallery updated successfully
-          description: ''
+          description: Gallery updated successfully
         '400':
           content:
             application/json:
@@ -1014,7 +1066,7 @@ paths:
                     - Enter a valid URL.
                   summary: Bad Request
                   description: Invalid gallery data provided
-          description: ''
+          description: Invalid request data
         '401':
           content:
             application/json:
@@ -1025,7 +1077,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -1037,9 +1089,11 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Gallery does not exist
-          description: ''
+          description: Gallery not found
     patch:
-      operationId: galleries_partial_update
+      operationId: partially_update_gallery
+      description: Partially update an existing gallery.
+      summary: Partially update a gallery
       parameters:
       - in: path
         name: id
@@ -1054,13 +1108,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedGallery'
+              $ref: '#/components/schemas/PatchedGalleryCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedGallery'
+              $ref: '#/components/schemas/PatchedGalleryCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedGallery'
+              $ref: '#/components/schemas/PatchedGalleryCreate'
       security:
       - jwtAuth: []
       responses:
@@ -1069,10 +1123,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Gallery'
-          description: ''
+          description: Gallery partially updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Gallery not found
     delete:
       operationId: delete_gallery
-      description: Delete a gallery
+      description: Delete a gallery by ID.
+      summary: Delete a gallery
       parameters:
       - in: path
         name: id
@@ -1087,7 +1160,7 @@ paths:
       - jwtAuth: []
       responses:
         '204':
-          description: No response body
+          description: Gallery deleted successfully
         '401':
           content:
             application/json:
@@ -1098,7 +1171,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -1110,12 +1183,12 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Gallery does not exist
-          description: ''
+          description: Gallery not found
   /api/projects/:
     get:
       operationId: list_projects
-      description: Retrieve a list of all projects. Optionally filter by client_id
-        query parameter.
+      description: Retrieve a list of all projects. Optionally filter by client_id.
+      summary: List all projects
       tags:
       - projects
       security:
@@ -1147,7 +1220,7 @@ paths:
                       created_at: '2026-05-21T10:15:00Z'
                   summary: Successful Response
                   description: List of projects
-          description: ''
+          description: List of projects retrieved successfully
         '401':
           content:
             application/json:
@@ -1158,10 +1231,11 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
     post:
       operationId: create_project
-      description: Create a new project for a client
+      description: Create a new project for a client.
+      summary: Create a project
       tags:
       - projects
       requestBody:
@@ -1210,7 +1284,7 @@ paths:
                     created_at: '2026-05-21T10:25:00Z'
                   summary: Successful Response
                   description: Project created successfully
-          description: ''
+          description: Project created successfully
         '400':
           content:
             application/json:
@@ -1223,7 +1297,7 @@ paths:
                     - '"invalid" is not a valid choice.'
                   summary: Bad Request
                   description: Invalid project data provided
-          description: ''
+          description: Invalid request data
         '401':
           content:
             application/json:
@@ -1234,11 +1308,12 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
   /api/projects/{id}/:
     get:
       operationId: retrieve_project
-      description: Retrieve a single project by ID
+      description: Get a specific project by ID.
+      summary: Retrieve a project
       parameters:
       - in: path
         name: id
@@ -1276,7 +1351,7 @@ paths:
                     created_at: '2026-05-21T10:15:00Z'
                   summary: Successful Response
                   description: Single project details
-          description: ''
+          description: Project retrieved successfully
         '401':
           content:
             application/json:
@@ -1287,7 +1362,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -1299,10 +1374,11 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Project does not exist
-          description: ''
+          description: Project not found
     put:
       operationId: update_project
-      description: Update an existing project
+      description: Update an existing project.
+      summary: Update a project
       parameters:
       - in: path
         name: id
@@ -1352,7 +1428,7 @@ paths:
                     created_at: '2026-05-21T10:15:00Z'
                   summary: Successful Response
                   description: Project updated successfully
-          description: ''
+          description: Project updated successfully
         '400':
           content:
             application/json:
@@ -1365,7 +1441,7 @@ paths:
                     - '"invalid" is not a valid choice.'
                   summary: Bad Request
                   description: Invalid project data provided
-          description: ''
+          description: Invalid request data
         '401':
           content:
             application/json:
@@ -1376,7 +1452,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -1388,9 +1464,11 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Project does not exist
-          description: ''
+          description: Project not found
     patch:
-      operationId: projects_partial_update
+      operationId: partially_update_project
+      description: Partially update an existing project.
+      summary: Partially update a project
       parameters:
       - in: path
         name: id
@@ -1405,13 +1483,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedProject'
+              $ref: '#/components/schemas/PatchedProjectCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedProject'
+              $ref: '#/components/schemas/PatchedProjectCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedProject'
+              $ref: '#/components/schemas/PatchedProjectCreate'
       security:
       - jwtAuth: []
       responses:
@@ -1420,10 +1498,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-          description: ''
+          description: Project partially updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Project not found
     delete:
       operationId: delete_project
-      description: Delete a project
+      description: Delete a project by ID.
+      summary: Delete a project
       parameters:
       - in: path
         name: id
@@ -1438,7 +1535,7 @@ paths:
       - jwtAuth: []
       responses:
         '204':
-          description: No response body
+          description: Project deleted successfully
         '401':
           content:
             application/json:
@@ -1449,7 +1546,7 @@ paths:
                   value:
                     detail: Authentication credentials were not provided.
                   description: Missing authentication credentials
-          description: ''
+          description: Authentication required
         '404':
           content:
             application/json:
@@ -1461,15 +1558,14 @@ paths:
                     detail: Not found.
                   summary: Not Found
                   description: Project does not exist
-          description: ''
-  /api/tokens/:
+          description: Project not found
+  /api/token/:
     post:
-      operationId: tokens_create
-      description: |-
-        Takes a set of user credentials and returns an access and refresh JSON web
-        token pair to prove the authentication of those credentials.
+      operationId: obtain_token
+      description: Authenticate and obtain access and refresh tokens.
+      summary: Obtain JWT token
       tags:
-      - tokens
+      - token
       requestBody:
         content:
           application/json:
@@ -1487,16 +1583,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenObtainPair'
-          description: ''
-  /api/tokens/refresh/:
+                type: object
+                properties:
+                  access:
+                    type: string
+                  refresh:
+                    type: string
+          description: Successfully obtained JWT token
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Invalid username or password
+  /api/token/refresh/:
     post:
-      operationId: tokens_refresh_create
-      description: |-
-        Takes a refresh type JSON web token and returns an access type JSON web
-        token if the refresh token is valid.
+      operationId: refresh_token
+      description: Refresh an expired access token using a refresh token.
+      summary: Refresh JWT token
       tags:
-      - tokens
+      - token
       requestBody:
         content:
           application/json:
@@ -1514,8 +1620,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenRefresh'
-          description: ''
+                type: object
+                properties:
+                  access:
+                    type: string
+          description: Successfully refreshed token
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Invalid refresh token
 components:
   schemas:
     BadRequest:
@@ -1552,7 +1667,7 @@ components:
         location:
           type: string
           description: Booking location
-          maxLength: 30
+          maxLength: 20
         created_at:
           type: string
           format: date-time
@@ -1589,7 +1704,7 @@ components:
         location:
           type: string
           description: Booking location
-          maxLength: 30
+          maxLength: 20
       required:
       - date
       - duration
@@ -1607,15 +1722,15 @@ components:
         first_name:
           type: string
           description: Client's first name
-          maxLength: 30
+          maxLength: 20
         last_name:
           type: string
           description: Client's last name
-          maxLength: 30
+          maxLength: 20
         city:
           type: string
           description: City where client is located
-          maxLength: 30
+          maxLength: 20
         state:
           type: string
           description: State abbreviation (e.g., CA, NY)
@@ -1623,7 +1738,7 @@ components:
         zip_code:
           type: string
           description: Postal code for client's address
-          maxLength: 30
+          maxLength: 20
         email:
           type: string
           format: email
@@ -1654,15 +1769,15 @@ components:
         first_name:
           type: string
           description: Client's first name
-          maxLength: 30
+          maxLength: 20
         last_name:
           type: string
           description: Client's last name
-          maxLength: 30
+          maxLength: 20
         city:
           type: string
           description: City where client is located
-          maxLength: 30
+          maxLength: 20
         state:
           type: string
           description: State abbreviation (e.g., CA, NY)
@@ -1670,7 +1785,7 @@ components:
         zip_code:
           type: string
           description: Postal code for client's address
-          maxLength: 30
+          maxLength: 20
         email:
           type: string
           format: email
@@ -1762,19 +1877,15 @@ components:
         detail:
           type: string
           default: The requested resource was not found.
-    PatchedBooking:
+    PatchedBookingCreate:
       type: object
+      description: Serializer for creating bookings - excludes read-only fields (id,
+        project, created_at)
       properties:
-        id:
+        project_id:
           type: string
           format: uuid
-          readOnly: true
-          description: Unique identifier for the booking
-        project:
-          allOf:
-          - $ref: '#/components/schemas/Project'
-          readOnly: true
-          description: Project associated with this booking
+          description: UUID of the project for this booking
         date:
           type: string
           format: date
@@ -1789,32 +1900,24 @@ components:
         location:
           type: string
           description: Booking location
-          maxLength: 30
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-          description: When the booking was created
-    PatchedClient:
+          maxLength: 20
+    PatchedClientCreate:
       type: object
+      description: Serializer for creating clients - excludes read-only fields (id,
+        created_at)
       properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-          description: Unique identifier for the client
         first_name:
           type: string
           description: Client's first name
-          maxLength: 30
+          maxLength: 20
         last_name:
           type: string
           description: Client's last name
-          maxLength: 30
+          maxLength: 20
         city:
           type: string
           description: City where client is located
-          maxLength: 30
+          maxLength: 20
         state:
           type: string
           description: State abbreviation (e.g., CA, NY)
@@ -1822,7 +1925,7 @@ components:
         zip_code:
           type: string
           description: Postal code for client's address
-          maxLength: 30
+          maxLength: 20
         email:
           type: string
           format: email
@@ -1830,24 +1933,15 @@ components:
         phone_number:
           type: string
           description: Client's phone number
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-          description: Timestamp when client was created
-    PatchedGallery:
+    PatchedGalleryCreate:
       type: object
+      description: Serializer for creating galleries - excludes read-only fields (id,
+        project, created_at)
       properties:
-        id:
+        project_id:
           type: string
           format: uuid
-          readOnly: true
-          description: Unique identifier for the gallery
-        project:
-          allOf:
-          - $ref: '#/components/schemas/Project'
-          readOnly: true
-          description: Project associated with this gallery
+          description: UUID of the project for this gallery
         gallery_name:
           type: string
           description: Name of the gallery
@@ -1862,23 +1956,15 @@ components:
           type: string
           format: uri
           description: URL link to the gallery
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-          description: Timestamp when gallery was created
-    PatchedProject:
+    PatchedProjectCreate:
       type: object
+      description: Serializer for creating projects - excludes read-only fields (id,
+        client, created_at)
       properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-          description: Unique identifier for the project
         project_name:
           type: string
           description: Name of the project
-          maxLength: 30
+          maxLength: 20
         project_type:
           allOf:
           - $ref: '#/components/schemas/ProjectTypeEnum'
@@ -1888,16 +1974,10 @@ components:
             * `event` - event
             * `portrait` - portrait
             * `party` - party
-        client:
-          allOf:
-          - $ref: '#/components/schemas/Client'
-          readOnly: true
-          description: Client associated with this project
-        created_at:
+        client_id:
           type: string
-          format: date-time
-          readOnly: true
-          description: When the project was created
+          format: uuid
+          description: UUID of the client for this project
     Project:
       type: object
       properties:
@@ -1909,7 +1989,7 @@ components:
         project_name:
           type: string
           description: Name of the project
-          maxLength: 30
+          maxLength: 20
         project_type:
           allOf:
           - $ref: '#/components/schemas/ProjectTypeEnum'
@@ -1943,7 +2023,7 @@ components:
         project_name:
           type: string
           description: Name of the project
-          maxLength: 30
+          maxLength: 20
         project_type:
           allOf:
           - $ref: '#/components/schemas/ProjectTypeEnum'
