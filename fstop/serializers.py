@@ -37,6 +37,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True, help_text="Unique identifier for the project")
     project_name = serializers.CharField(max_length=20, help_text="Name of the project")
     project_type = serializers.ChoiceField(choices=['event', 'portrait', 'party'], help_text="Type of project (event, portrait, or party)")
+    client = ClientSerializer(read_only=True, help_text="Details of the client associated with this project")
     client_id = serializers.PrimaryKeyRelatedField(
         queryset=Client.objects.all(),
         source="client",
@@ -44,6 +45,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         help_text="UUID of the client for this project"
     )
     created_at = serializers.DateTimeField(read_only=True, help_text="When the project was created")
+
     class Meta:
         model = Project
         fields = ['id', 'project_name', 'project_type', 'client', 'client_id', 'created_at']
