@@ -2,6 +2,8 @@
 
 set -e
 
+PATH_TO_SCHEMA="$HOME/Code/portfolio-projects/fstop-docs/"
+
 # 1. Update OAS file
 
 echo "Generating OAS file..."
@@ -16,10 +18,18 @@ else
     echo "Schema generated!"
 fi
 
-# 2. Build Redocly docs
+# 2. Copy the latest schema to the docs repo
+echo "Copying schema to docs repo..."
+sleep 1
+cp schema.yml "$PATH_TO_SCHEMA"
 
-echo "Updating API reference docs..."
-redocly build-docs schema.yml --output=docs/index.html
+# Verify transfer was successful
+if [ -f "$PATH_TO_SCHEMA/schema.yml" ]; then
+    echo "Schema successfully transferred"
+else
+    echo "Unsuccessful transfer" 
+    exit 1
+fi
 
 # 3. Update Python SDK
 echo "Regenerating SDK..."
