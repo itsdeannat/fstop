@@ -14,7 +14,7 @@ targets:
         sourceRevisionDigest: sha256:b5baa9e7a5fb78d0279a31387f04c150bd3ee6d178ba3e0858150df711d3548f
         sourceBlobDigest: sha256:1f1aa6eea1958fa55ef378afd8b42da3f9f9e9c7517d5d658a0a97c2a0bbcf03
         codeSamplesNamespace: fstop-oas-python-code-samples
-        codeSamplesRevisionDigest: sha256:07f631d9c074c70fade3b3d688b616dc45774ca2a469ed9e2eef444b1ba96979
+        codeSamplesRevisionDigest: sha256:13f7b8e018fa4cee8b93fd1c388c332ccb348ca852946ef25ff288b8f6a49ca5
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
