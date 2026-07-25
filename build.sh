@@ -30,9 +30,3 @@ else
     echo "Unsuccessful transfer" 
     exit 1
 fi
-
-# 3. Update Python SDK
-echo "Regenerating SDK..."
-speakeasy run
-echo "SDK successfully updated."
-
