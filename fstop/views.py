@@ -596,7 +596,7 @@ class BookingViewSet(viewsets.ModelViewSet):
     @extend_schema(
         operation_id="list_bookings",
         summary="List all bookings",
-        description="Retrieve a list of all bookings. Optionally filter by project_id.",
+        description="Retrieve a list of all bookings. Optionally, filter by project_id.",
         responses={
             200: OpenApiResponse(response=BookingSerializer(many=True), description="List of bookings retrieved successfully"),
             401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
