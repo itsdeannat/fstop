@@ -9,7 +9,7 @@ paths:
   /api/bookings/:
     get:
       operationId: list_bookings
-      description: Retrieve a list of all bookings. Optionally filter by project_id.
+      description: Retrieve a list of all bookings. Optionally, filter by project_id.
       summary: List all bookings
       tags:
       - bookings
