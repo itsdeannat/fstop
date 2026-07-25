@@ -61,7 +61,7 @@ python:
   forwardCompatibleEnumsByDefault: true
   forwardCompatibleUnionsByDefault: tagged-only
   imports:
-    option: openapi
+    option: fstop_sdk
     paths:
       callbacks: ""
       errors: errors
@@ -77,7 +77,7 @@ python:
   multipartArrayFormat: standard
   outputModelSuffix: output
   packageManager: uv
-  packageName: openapi
+  packageName: fstop_sdk
   preApplyUnionDiscriminators: true
   pytestFilterWarnings: []
   pytestTimeout: 0
