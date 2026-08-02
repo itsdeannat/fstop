@@ -8,6 +8,7 @@ djangorestframework = "*"
 django-phonenumber-field = {extras = ["phonenumberslite"], version = "*"}
 drf-spectacular = "*"
 djangorestframework-simplejwt = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
