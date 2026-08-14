@@ -94,7 +94,7 @@ jobs:
             token: ${{ secrets.PAT_TOKEN }}
 
       - name: Install Redocly
-        run: npx i @redocly/cli@latest
+        run: npx @redocly/cli@latest
 
       - name: Copy OAS
         run: cp api/schema.yml docs/schema.yml
@@ -102,7 +102,7 @@ jobs:
       - name: Generate reference docs
         run: |
           cd docs
-          redocly build-docs schema.yml --output=public/api-reference.html
+          npx @redocly/cli@latest build-docs schema.yml --output=public/api-reference.html
 
       - name: Commit doc changes
         run: |
