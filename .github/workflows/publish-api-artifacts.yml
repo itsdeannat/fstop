@@ -75,7 +75,7 @@ jobs:
           git commit -m "Regenerate SDK from API changes" || echo "No changes to commit"
           git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/itsdeannat/fstop-python-sdk.git HEAD:dev
 
-  update-api-referencec-docs:
+  update-api-reference-docs:
     needs: run-specgate
     runs-on: ubuntu-latest
 
