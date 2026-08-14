@@ -64,4 +64,4 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m "Regenerate SDK from API changes" || echo "No changes to commit"
-          git push
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/itsdeannat/fstop-python-sdk.git HEAD:dev
