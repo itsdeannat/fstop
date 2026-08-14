@@ -47,6 +47,8 @@ jobs:
         run: cp api/schema.yml ./schema.yml
 
       - name: Run Speakeasy
+        env:
+          SPEAKEASY_API_KEY: ${{ secrets.SPEAKEASY_API_KEY }}
         run: |
           cd sdk
           speakeasy run
