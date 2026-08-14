@@ -6,6 +6,9 @@ on:
       - "**.yaml"
       - "**.yml"
 
+permissions:
+  contents: write
+
 jobs:
   run-specgate:
     runs-on: ubuntu-latest
