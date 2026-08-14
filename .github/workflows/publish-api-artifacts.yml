@@ -37,6 +37,7 @@ jobs:
         uses: actions/checkout@v4
         with:
             repository: 'itsdeannat/fstop-python-sdk'
+            path: 'sdk'
             ref: 'dev'
 
       - name: Install Speakeasy
