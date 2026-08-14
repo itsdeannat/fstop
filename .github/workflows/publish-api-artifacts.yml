@@ -6,6 +6,14 @@ on:
       - "**.yaml"
       - "**.yml"
 
+  workflow_dispatch:
+    inputs:
+      skip_sdk:
+        description: "Skip SDK generation"
+        required: false
+        default: false
+        type: boolean
+
 permissions:
   contents: write
 
@@ -28,6 +36,7 @@ jobs:
         run: $(go env GOPATH)/bin/specgate check schema.yml
 
   update-sdk:
+    if: ${{ !inputs.skip_sdk }}
     needs: run-specgate
     runs-on: ubuntu-latest
     steps:
