@@ -92,10 +92,7 @@ jobs:
             path: 'docs'
             ref: 'dev'
             token: ${{ secrets.PAT_TOKEN }}
-
-      - name: Install Redocly
-        run: npx @redocly/cli@latest
-
+            
       - name: Copy OAS
         run: cp api/schema.yml docs/schema.yml
 
