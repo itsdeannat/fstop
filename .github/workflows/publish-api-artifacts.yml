@@ -44,7 +44,7 @@ jobs:
         run: curl -fsSL https://go.speakeasy.com/cli-install.sh | sh
 
       - name: Copy OAS
-        run: cp api/schema.yml ./schema.yml
+        run: cp api/schema.yml sdk./schema.yml
 
       - name: Run Speakeasy
         env:
