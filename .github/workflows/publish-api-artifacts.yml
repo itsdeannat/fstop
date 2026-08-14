@@ -42,6 +42,7 @@ jobs:
             repository: 'itsdeannat/fstop-python-sdk'
             path: 'sdk'
             ref: 'dev'
+            token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Speakeasy
         run: curl -fsSL https://go.speakeasy.com/cli-install.sh | sh
