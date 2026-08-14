@@ -47,7 +47,9 @@ jobs:
         run: cp api/schema.yml ./schema.yml
 
       - name: Run Speakeasy
-        run: $(go env GOPATH)/bin/speakeasy run
+        run: |
+          cd sdk
+          speakeasy run
 
       - name: Commit SDK changes
         run: |
