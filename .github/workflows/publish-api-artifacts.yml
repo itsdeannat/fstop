@@ -76,7 +76,7 @@ jobs:
           git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/itsdeannat/fstop-python-sdk.git HEAD:dev
 
   update-api-referencec-docs:
-    needs: update-sdk
+    needs: run-specgate
     runs-on: ubuntu-latest
 
     steps:
@@ -88,23 +88,25 @@ jobs:
       - name: Check out docs repo
         uses: actions/checkout@v4
         with:
-            repository: 'itsdeannat/fstop-python-sdk'
+            repository: 'itsdeannat/fstop-docs'
             path: 'docs'
             ref: 'dev'
             token: ${{ secrets.PAT_TOKEN }}
 
       - name: Install Redocly
-        run: npm i @redocly/cli@latest
+        run: npx i @redocly/cli@latest
 
       - name: Copy OAS
         run: cp api/schema.yml docs/schema.yml
 
       - name: Generate reference docs
-        run: redocly build-docs schema.yml --output=public/api-reference.html
+        run: |
+          cd docs
+          redocly build-docs schema.yml --output=public/api-reference.html
 
       - name: Commit doc changes
         run: |
-          cd sdk
+          cd docs
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
