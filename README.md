@@ -6,7 +6,7 @@ The platform gives photographers a place to manage their work and clients. Photo
 
 The Fstop API provides a realistic API to work with while exploring the relationship between APIs, OpenAPI specifications, SDKs, and developer documentation.
 
-> **⚠️ Project status:** Fstop is a learning and portfolio project, not a production API. It currently runs locally and has not undergone comprehensive testing or production hardening. **Do not use it for production applications**.
+> **⚠️ Project status:** Fstop is a learning project, not a production API. It currently runs locally and has not undergone comprehensive testing or production hardening. **Do not use it for production applications**.
 
 ## What can the API do?
 
