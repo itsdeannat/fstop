@@ -20,7 +20,7 @@ from .serializers import (
     NotFoundSerializer,
     UserSignupSerializer
 )
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiExample, OpenApiResponse
 from rest_framework.response import Response
@@ -1272,7 +1272,7 @@ class GalleryViewSet(viewsets.ModelViewSet):
     )
 )
 class CustomTokenObtainPairView(TokenObtainPairView):
-    pass
+    permission_classes = [AllowAny]
 
 @extend_schema_view(
     post=extend_schema(
@@ -1289,9 +1289,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     )
 )
 class CustomTokenRefreshView(TokenRefreshView):
-    pass
+    permission_classes = [AllowAny]
 
 class UserSignupView(APIView):
+    permission_classes = [AllowAny]
 
     @extend_schema(exclude=True)
     def post(self, request):

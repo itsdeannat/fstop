@@ -168,30 +168,32 @@ class UserSignupSerializer(serializers.ModelSerializer):
     Validates and creates a user account with a username and password.
 
     Fields:
-        username (str): The user's username. Must be alphanumeric.
-        password (str): The user's password. Must be alphanumeric.
+        username (str): The user's username. Must be unique.
+        password (str): The user's password. Will be hashed for security.
 
-    Raises:
-        serializers.ValidationError: If the username or password is not alphanumeric.
-        
     Methods:
-        def_validate_username(username): Validates that username is alphanumeric. 
-        def_validate_password(password): Validates that password is alphanumeric. 
-        def_create: Creates a new user with validated data
+        create: Creates a new user with hashed password
 
     Returns:
         User: the new User instance
     """
     
-    username = serializers.CharField(
-        required=True,
-        error_messages={
-            "required": "A username is required.",
-        }
-    )
     password = serializers.CharField(
+        write_only=True,
         required=True,
         error_messages={
             "required": "A password is required.",
         }
     )
+    
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+    
+    def create(self, validated_data):
+        """Create a new user with hashed password"""
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password']
+        )
+        return user
