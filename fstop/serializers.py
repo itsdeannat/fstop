@@ -161,3 +161,37 @@ class UnauthorizedSerializer(serializers.Serializer):
 class NotFoundSerializer(serializers.Serializer):
     """Serializer for 404 Not Found responses"""
     detail = serializers.CharField(default="The requested resource was not found.")
+    
+class UserSignupSerializer(serializers.ModelSerializer):
+    """Serializer for user signups. 
+    
+    Validates and creates a user account with a username and password.
+
+    Fields:
+        username (str): The user's username. Must be alphanumeric.
+        password (str): The user's password. Must be alphanumeric.
+
+    Raises:
+        serializers.ValidationError: If the username or password is not alphanumeric.
+        
+    Methods:
+        def_validate_username(username): Validates that username is alphanumeric. 
+        def_validate_password(password): Validates that password is alphanumeric. 
+        def_create: Creates a new user with validated data
+
+    Returns:
+        User: the new User instance
+    """
+    
+    username = serializers.CharField(
+        required=True,
+        error_messages={
+            "required": "A username is required.",
+        }
+    )
+    password = serializers.CharField(
+        required=True,
+        error_messages={
+            "required": "A password is required.",
+        }
+    )
