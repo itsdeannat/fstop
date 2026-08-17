@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from .models import Client, Project, Booking, Gallery
+from django.contrib.auth.models import User
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -31,6 +33,24 @@ class ClientCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ['first_name', 'last_name', 'city', 'state', 'zip_code', 'email', 'phone_number']
+    
+    def validate_email(self, value):
+        """Ensure email is unique across all clients"""
+        if Client.objects.filter(email=value).exists():
+            raise ValidationError("A client with this email already exists.")
+        return value
+    
+    def validate_state(self, value):
+        """Ensure state is a valid 2-character code"""
+        if len(value) != 2 or not value.isalpha():
+            raise ValidationError("State must be a 2-letter abbreviation (e.g., CA, NY).")
+        return value.upper()
+    
+    def validate_phone_number(self, value):
+        """Ensure phone number is not empty"""
+        if not value or len(value.replace('+', '').replace('-', '').replace(' ', '')) < 10:
+            raise ValidationError("Phone number must be at least 10 digits.")
+        return value
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -141,3 +161,39 @@ class UnauthorizedSerializer(serializers.Serializer):
 class NotFoundSerializer(serializers.Serializer):
     """Serializer for 404 Not Found responses"""
     detail = serializers.CharField(default="The requested resource was not found.")
+    
+class UserSignupSerializer(serializers.ModelSerializer):
+    """Serializer for user signups. 
+    
+    Validates and creates a user account with a username and password.
+
+    Fields:
+        username (str): The user's username. Must be unique.
+        password (str): The user's password. Will be hashed for security.
+
+    Methods:
+        create: Creates a new user with hashed password
+
+    Returns:
+        User: the new User instance
+    """
+    
+    password = serializers.CharField(
+        write_only=True,
+        required=True,
+        error_messages={
+            "required": "A password is required.",
+        }
+    )
+    
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+    
+    def create(self, validated_data):
+        """Create a new user with hashed password"""
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password']
+        )
+        return user

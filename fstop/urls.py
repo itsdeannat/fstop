@@ -4,6 +4,7 @@ from .views import ClientViewSet
 from .views import ProjectViewSet
 from .views import BookingViewSet
 from .views import GalleryViewSet
+from .views import UserSignupView
 
 router = DefaultRouter()
 router.register(r'clients', ClientViewSet, basename='client')
@@ -13,5 +14,6 @@ router.register(r'galleries', GalleryViewSet, basename='gallery')
 
 
 urlpatterns = [
-    path('api/', include(router.urls)) 
+    path('api/', include(router.urls)),
+    path('api/signup/', UserSignupView.as_view(), name='signup'),
 ]

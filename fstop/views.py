@@ -18,19 +18,31 @@ from .serializers import (
     BadRequestSerializer,
     UnauthorizedSerializer,
     NotFoundSerializer,
+    UserSignupSerializer
 )
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiExample, OpenApiResponse
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.exceptions import PermissionDenied
+from .permissions import IsOwner, IsClientOwnerViaProject
 
 # Create your views here.
 
 class ClientViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
     
-    queryset = Client.objects.all()
     serializer_class = ClientSerializer
+    
+    def get_queryset(self):
+        """Only return clients owned by the requesting user"""
+        return Client.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        """Auto-assign the owner when creating a new client"""
+        serializer.save(user=self.request.user)
 
     @extend_schema(
         operation_id="list_clients",
@@ -297,16 +309,25 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 class ProjectViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsClientOwnerViaProject]
     
     serializer_class = ProjectSerializer
 
     def get_queryset(self):
-        queryset = Project.objects.all()
+        """Only return projects whose clients are owned by the requesting user"""
+        queryset = Project.objects.filter(client__user=self.request.user)
+        # Allow filtering by client_id (if they own that client)
         client_id = self.request.query_params.get('client_id')
         if client_id:
             queryset = queryset.filter(client_id=client_id)
         return queryset
+    
+    def perform_create(self, serializer):
+        """Validate that the user owns the client before creating a project"""
+        client = serializer.validated_data['client']
+        if client.user != self.request.user:
+            raise PermissionDenied("You can only create projects for clients you own.")
+        serializer.save()
 
     @extend_schema(
         operation_id="list_projects",
@@ -582,16 +603,25 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 class BookingViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsClientOwnerViaProject]
     
     serializer_class = BookingSerializer
 
     def get_queryset(self):
-        queryset = Booking.objects.all()
+        """Only return bookings for projects whose clients are owned by the requesting user"""
+        queryset = Booking.objects.filter(project__client__user=self.request.user)
+        # Allow filtering by project_id (if they own that project's client)
         project_id = self.request.query_params.get('project_id')
         if project_id:
             queryset = queryset.filter(project_id=project_id)
         return queryset
+    
+    def perform_create(self, serializer):
+        """Validate that the user owns the project before creating a booking"""
+        project = serializer.validated_data['project']
+        if project.client.user != self.request.user:
+            raise PermissionDenied("You can only create bookings for projects you own.")
+        serializer.save()
 
     @extend_schema(
         operation_id="list_bookings",
@@ -901,16 +931,25 @@ class BookingViewSet(viewsets.ModelViewSet):
 
 class GalleryViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsClientOwnerViaProject]
     
     serializer_class = GallerySerializer
 
     def get_queryset(self):
-        queryset = Gallery.objects.all()
+        """Only return galleries for projects whose clients are owned by the requesting user"""
+        queryset = Gallery.objects.filter(project__client__user=self.request.user)
+        # Allow filtering by project_id (if they own that project's client)
         project_id = self.request.query_params.get('project_id')
         if project_id:
             queryset = queryset.filter(project_id=project_id)
         return queryset
+    
+    def perform_create(self, serializer):
+        """Validate that the user owns the project before creating a gallery"""
+        project = serializer.validated_data['project']
+        if project.client.user != self.request.user:
+            raise PermissionDenied("You can only create galleries for projects you own.")
+        serializer.save()
 
     @extend_schema(
         operation_id="list_galleries",
@@ -1233,7 +1272,7 @@ class GalleryViewSet(viewsets.ModelViewSet):
     )
 )
 class CustomTokenObtainPairView(TokenObtainPairView):
-    pass
+    permission_classes = [AllowAny]
 
 @extend_schema_view(
     post=extend_schema(
@@ -1250,4 +1289,18 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     )
 )
 class CustomTokenRefreshView(TokenRefreshView):
-    pass
+    permission_classes = [AllowAny]
+
+class UserSignupView(APIView):
+    permission_classes = [AllowAny]
+
+    @extend_schema(exclude=True)
+    def post(self, request):
+        """
+        Handles POST requests to create a new user in the database
+        """
+        serializer = UserSignupSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Signup successful!'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
