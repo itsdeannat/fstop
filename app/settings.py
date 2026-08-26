@@ -144,7 +144,7 @@ SPECTACULAR_SETTINGS = {
     'SERVERS': [
         {
             'url': 'https://fstop.photo',
-            'description': 'Production server'
+            'description': 'Fstop Production server'
         }
     ],
 }
