@@ -3,8 +3,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "**.yaml"
-      - "**.yml"
+      - "schema.yml"
 
   workflow_dispatch:
     inputs:
