@@ -3,3 +3,4 @@ db.sqlite3
 .speakeasy/temp/
 .env
 .DS_Store
+.vscode/
