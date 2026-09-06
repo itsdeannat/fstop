@@ -33,7 +33,7 @@ from .permissions import IsOwner, IsClientOwnerViaProject
 class ClientViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsOwner]
-    
+    queryset = Client.objects.all()
     serializer_class = ClientSerializer
     
     def get_queryset(self):
@@ -310,7 +310,7 @@ class ClientViewSet(viewsets.ModelViewSet):
 class ProjectViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsClientOwnerViaProject]
-    
+    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
     def get_queryset(self):
@@ -604,7 +604,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 class BookingViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsClientOwnerViaProject]
-    
+    queryset = Booking.objects.all()
     serializer_class = BookingSerializer
 
     def get_queryset(self):
@@ -932,7 +932,7 @@ class BookingViewSet(viewsets.ModelViewSet):
 class GalleryViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsClientOwnerViaProject]
-    
+    queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
 
     def get_queryset(self):
