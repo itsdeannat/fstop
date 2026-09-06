@@ -17,16 +17,3 @@ if [ $? -ne 0 ]; then
 else
     echo "Schema generated!"
 fi
-
-# 2. Copy the latest schema to the docs repo
-echo "Copying schema to docs repo..."
-sleep 1
-cp schema.yml "$PATH_TO_SCHEMA"
-
-# Verify transfer was successful
-if [ -f "$PATH_TO_SCHEMA/schema.yml" ]; then
-    echo "Schema successfully transferred"
-else
-    echo "Unsuccessful transfer" 
-    exit 1
-fi
