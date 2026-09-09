@@ -3,3 +3,7 @@ db.sqlite3
 .speakeasy/temp/
 .env
 .DS_Store
+.vscode/
+app/__pycache__/
+fstop/__pycache__/
+fstop/migrations/__pycache__/
