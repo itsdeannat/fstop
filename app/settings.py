@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
 
 load_dotenv()
 
@@ -26,11 +27,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
+if not SECRET_KEY:
+    raise ImproperlyConfigured('SECRET_KEY must be set.')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '::1']
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(
+        'ALLOWED_HOSTS',
+        'localhost,127.0.0.1,::1',
+    ).split(',')
+    if host.strip()
+]
 
 
 # Application definition
