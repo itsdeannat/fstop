@@ -117,13 +117,13 @@ class BookingCreateSerializer(serializers.ModelSerializer):
 
 class GallerySerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True, help_text="Unique identifier for the gallery")
-    booking_id = serializers.PrimaryKeyRelatedField(
-        queryset=Booking.objects.all(),
-        source="booking",
+    project = ProjectSerializer(read_only=True, help_text="Project associated with this gallery")
+    project_id = serializers.PrimaryKeyRelatedField(
+        queryset=Project.objects.all(),
+        source="project",
         write_only=True,
-        help_text="UUID of the booking for this gallery"
+        help_text="UUID of the project for this gallery"
     )
-    booking = BookingSerializer(read_only=True, help_text="Booking associated with this gallery")
     gallery_name = serializers.CharField(max_length=50, help_text="Name of the gallery")
     picture_count = serializers.IntegerField(help_text="Number of pictures in the gallery")
     is_visible = serializers.BooleanField(help_text="Whether the gallery is publicly visible")
@@ -132,7 +132,7 @@ class GallerySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Gallery
-        fields = ['id', 'booking', 'booking_id', 'gallery_name', 'picture_count', 'is_visible', 'url', 'created_at']
+        fields = ['id', 'project', 'project_id', 'gallery_name', 'picture_count', 'is_visible', 'url', 'created_at']
 
 
 class GalleryCreateSerializer(serializers.ModelSerializer):
