@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Client
+from .models import Client, Project, Gallery
 
 # Create your tests here.
 
@@ -143,3 +143,40 @@ class AuthorizationModificationTests(FstopTestCase):
             response.status_code,
             status.HTTP_404_NOT_FOUND
         )
+
+
+class GalleryCreationTests(FstopTestCase):
+    """Gallery creation should work for projects owned by the authenticated user."""
+    def test_user_can_create_gallery_for_own_project(self):
+        client = Client.objects.create(
+            user=self.user,
+            first_name='Jane',
+            last_name='Doe',
+            city='Cleveland',
+            state='OH',
+            zip_code='44122',
+            email='jane@example.com',
+            phone_number='+12161234567'
+        )
+        project = Project.objects.create(
+            project_name='Wedding',
+            project_type='event',
+            client=client,
+        )
+
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.post(
+            '/api/galleries/',
+            {
+                'project_id': str(project.id),
+                'gallery_name': 'Ceremony Photos',
+                'picture_count': 25,
+                'is_visible': True,
+                'url': 'https://example.com/gallery/ceremony'
+            },
+            format='json'
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Gallery.objects.filter(project=project).exists())
