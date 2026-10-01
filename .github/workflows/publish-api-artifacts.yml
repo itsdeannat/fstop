@@ -1,9 +1,10 @@
 name: Publish API Artifacts
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "schema.yml"
+  workflow_run:
+    workflows: ["Deploy to Railway"]
+    types: 
+      - completed
+
 
   workflow_dispatch:
     inputs:
@@ -12,11 +13,7 @@ on:
         required: false
         default: false
         type: boolean
-  workflow_run:
-    workflows: ["Deploy to Railway"]
-    types: 
-      - completed
-
+        
 permissions:
   contents: write
 
