@@ -3,6 +3,8 @@ name: Deploy to Railway
 on:
   push:
     branches: [main]
+    paths:
+        - "fstop/**"
 
 jobs:
   deploy:
