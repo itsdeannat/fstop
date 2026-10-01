@@ -12,6 +12,10 @@ on:
         required: false
         default: false
         type: boolean
+  workflow_run:
+    workflows: ["Validate API"]
+    types: 
+      - completed
 
 permissions:
   contents: write
