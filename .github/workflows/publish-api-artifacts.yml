@@ -1,4 +1,4 @@
-name: publish-api-artifacts 
+name: Publish API Artifacts
 on:
   push:
     branches: ["main"]
@@ -12,31 +12,17 @@ on:
         required: false
         default: false
         type: boolean
+  workflow_run:
+    workflows: ["Deploy to Railway"]
+    types: 
+      - completed
 
 permissions:
   contents: write
 
 jobs:
-  run-specgate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.21'
-
-      - name: Install SpecGate
-        run: go install github.com/itsdeannat/specgate@latest
-
-      - name: Create SpecGate config
-        run: $(go env GOPATH)/bin/specgate init
-
-      - name: Check OpenAPI spec
-        run: $(go env GOPATH)/bin/specgate check schema.yml
-
   update-sdk:
     if: ${{ !inputs.skip_sdk }}
-    needs: run-specgate
     runs-on: ubuntu-latest
     steps:
       - name: Check out API repo
@@ -75,7 +61,6 @@ jobs:
           git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/itsdeannat/fstop-python-sdk.git HEAD:dev
 
   update-api-reference-docs:
-    needs: run-specgate
     runs-on: ubuntu-latest
 
     steps:
