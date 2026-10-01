@@ -4,7 +4,12 @@ on:
   push:
     branches: [main]
     paths:
-        - "fstop/**"
+      - "fstop/**"
+ 
+  workflow_run:
+    workflows: ["Validate API"]
+    types:
+        - completed
 
 jobs:
   deploy:
