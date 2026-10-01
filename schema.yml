@@ -157,6 +157,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - bookings
@@ -220,11 +222,15 @@ paths:
           description: Booking not found
     put:
       operationId: bookings_update
+      description: Update a booking by ID.
+      summary: Update a booking
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - bookings
@@ -248,14 +254,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Booking'
-          description: ''
+          description: Booking updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Booking not found
     patch:
       operationId: bookings_partial_update
+      description: Partially update a booking by ID.
+      summary: Partially update a booking
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - bookings
@@ -278,7 +306,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Booking'
-          description: ''
+          description: Booking updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Booking not found
     delete:
       operationId: delete_booking
       description: Delete a booking by ID.
@@ -288,6 +334,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - bookings
@@ -457,6 +505,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - clients
@@ -508,11 +558,15 @@ paths:
           description: Client not found
     put:
       operationId: clients_update
+      description: Update a client by ID.
+      summary: Update a client
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - clients
@@ -536,14 +590,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Client'
-          description: ''
+          description: Client updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Client not found
     patch:
       operationId: clients_partial_update
+      description: Partially update a client by ID.
+      summary: Partially update a client
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - clients
@@ -566,7 +642,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Client'
-          description: ''
+          description: Client updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Client not found
     delete:
       operationId: delete_client
       description: Delete a client by ID.
@@ -576,6 +670,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - clients
@@ -758,6 +854,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - galleries
@@ -821,11 +919,15 @@ paths:
           description: Gallery not found
     put:
       operationId: galleries_update
+      description: Update a gallery by ID.
+      summary: Update a gallery
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - galleries
@@ -849,14 +951,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Gallery'
-          description: ''
+          description: Gallery updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Gallery not found
     patch:
       operationId: galleries_partial_update
+      description: Partially update a gallery by ID.
+      summary: Partially update a gallery
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - galleries
@@ -879,7 +1003,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Gallery'
-          description: ''
+          description: Gallery updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Gallery not found
     delete:
       operationId: delete_gallery
       description: Delete a gallery by ID.
@@ -889,6 +1031,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - galleries
@@ -1055,6 +1199,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - projects
@@ -1111,11 +1257,15 @@ paths:
           description: Project not found
     put:
       operationId: projects_update
+      description: Update a project by ID.
+      summary: Update a project
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - projects
@@ -1139,14 +1289,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-          description: ''
+          description: Project updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Project not found
     patch:
       operationId: projects_partial_update
+      description: Partially update a project by ID.
+      summary: Partially update a project
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - projects
@@ -1169,7 +1341,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-          description: ''
+          description: Project updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Invalid request data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+          description: Authentication required
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: Project not found
     delete:
       operationId: delete_project
       description: Delete a project by ID.
@@ -1179,6 +1369,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: Unique identifier of the resource.
         required: true
       tags:
       - projects

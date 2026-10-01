@@ -22,7 +22,14 @@ from .serializers import (
 )
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiExample, OpenApiResponse
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiExample,
+    OpenApiParameter,
+    OpenApiResponse,
+    OpenApiTypes,
+)
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
@@ -30,6 +37,50 @@ from .permissions import IsOwner, IsClientOwnerViaProject
 
 # Create your views here.
 
+RESOURCE_ID_PARAMETER = OpenApiParameter(
+    name="id",
+    type=OpenApiTypes.UUID,
+    location=OpenApiParameter.PATH,
+    description="Unique identifier of the resource.",
+)
+
+
+def _document_detail_updates(resource_name, resource_plural, serializer):
+    def update_schema(partial=False):
+        action = "partial_update" if partial else "update"
+        summary = "Partially update" if partial else "Update"
+        return extend_schema(
+            operation_id=f"{resource_plural}_{action}",
+            summary=f"{summary} a {resource_name}",
+            description=f"{summary} a {resource_name} by ID.",
+            parameters=[RESOURCE_ID_PARAMETER],
+            responses={
+                200: OpenApiResponse(
+                    response=serializer,
+                    description=f"{resource_name.capitalize()} updated successfully",
+                ),
+                400: OpenApiResponse(
+                    response=BadRequestSerializer,
+                    description="Invalid request data",
+                ),
+                401: OpenApiResponse(
+                    response=UnauthorizedSerializer,
+                    description="Authentication required",
+                ),
+                404: OpenApiResponse(
+                    response=NotFoundSerializer,
+                    description=f"{resource_name.capitalize()} not found",
+                ),
+            },
+        )
+
+    return extend_schema_view(
+        update=update_schema(),
+        partial_update=update_schema(partial=True),
+    )
+
+
+@_document_detail_updates("client", "clients", ClientSerializer)
 class ClientViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsOwner]
@@ -162,6 +213,7 @@ class ClientViewSet(viewsets.ModelViewSet):
         operation_id="retrieve_client",
         summary="Retrieve a client",
         description="Get a specific client by ID.",
+        parameters=[RESOURCE_ID_PARAMETER],
         responses={
             200: OpenApiResponse(response=ClientSerializer, description="Client retrieved successfully"),
             401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
@@ -208,6 +260,7 @@ class ClientViewSet(viewsets.ModelViewSet):
         operation_id="delete_client",
         summary="Delete a client",
         description="Delete a client by ID.",
+        parameters=[RESOURCE_ID_PARAMETER],
         responses={
             204: OpenApiResponse(description="Client deleted successfully"),
             401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
@@ -235,6 +288,7 @@ class ClientViewSet(viewsets.ModelViewSet):
         return super().destroy(request, pk=pk)
 
 
+@_document_detail_updates("project", "projects", ProjectSerializer)
 class ProjectViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsClientOwnerViaProject]
@@ -372,6 +426,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         operation_id="retrieve_project",
         summary="Retrieve a project",
         description="Get a specific project by ID.",
+        parameters=[RESOURCE_ID_PARAMETER],
         responses={
             200: OpenApiResponse(response=ProjectSerializer, description="Project retrieved successfully"),
             401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
@@ -424,6 +479,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         operation_id="delete_project",
         summary="Delete a project",
         description="Delete a project by ID.",
+        parameters=[RESOURCE_ID_PARAMETER],
         responses={
             204: OpenApiResponse(description="Project deleted successfully"),
             401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
@@ -451,6 +507,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return super().destroy(request, pk=pk)
 
 
+@_document_detail_updates("booking", "bookings", BookingSerializer)
 class BookingViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsClientOwnerViaProject]
@@ -606,6 +663,7 @@ class BookingViewSet(viewsets.ModelViewSet):
         operation_id="retrieve_booking",
         summary="Retrieve a booking",
         description="Get a specific booking by ID.",
+        parameters=[RESOURCE_ID_PARAMETER],
         responses={
             200: OpenApiResponse(response=BookingSerializer, description="Booking retrieved successfully"),
             401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
@@ -666,6 +724,7 @@ class BookingViewSet(viewsets.ModelViewSet):
         operation_id="delete_booking",
         summary="Delete a booking",
         description="Delete a booking by ID.",
+        parameters=[RESOURCE_ID_PARAMETER],
         responses={
             204: OpenApiResponse(description="Booking deleted successfully"),
             401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
@@ -693,6 +752,7 @@ class BookingViewSet(viewsets.ModelViewSet):
         return super().destroy(request, pk=pk)
 
 
+@_document_detail_updates("gallery", "galleries", GallerySerializer)
 class GalleryViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsClientOwnerViaProject]
@@ -848,6 +908,7 @@ class GalleryViewSet(viewsets.ModelViewSet):
         operation_id="retrieve_gallery",
         summary="Retrieve a gallery",
         description="Get a specific gallery by ID.",
+        parameters=[RESOURCE_ID_PARAMETER],
         responses={
             200: OpenApiResponse(response=GallerySerializer, description="Gallery retrieved successfully"),
             401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
@@ -908,6 +969,7 @@ class GalleryViewSet(viewsets.ModelViewSet):
         operation_id="delete_gallery",
         summary="Delete a gallery",
         description="Delete a gallery by ID.",
+        parameters=[RESOURCE_ID_PARAMETER],
         responses={
             204: OpenApiResponse(description="Gallery deleted successfully"),
             401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),
