@@ -982,3 +982,16 @@ class UserSignupView(APIView):
             serializer.save()
             return Response({'message': 'Signup successful!'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class HealthCheckView(APIView):
+    permission_classes = [AllowAny]
+
+    @extend_schema(exclude=True)
+    def get(self, request):
+        """
+        Simple endpoint to check the API's health
+        """
+        content = {
+            "status": "ok"
+        }
+        return Response(content, status=status.HTTP_200_OK)
