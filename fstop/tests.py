@@ -180,3 +180,21 @@ class GalleryCreationTests(FstopTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(Gallery.objects.filter(project=project).exists())
+
+class HealthTests(FstopTestCase):
+    """
+    Contains a method that tests the API's health
+    """
+    def test_get_health(self):
+        data = {
+            'username': self.username,
+            'password': self.password
+        }
+        
+        response = self.client.get( # Sends a post request to /api/token/
+            '/api/health/',
+            data,
+            format='json'
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
