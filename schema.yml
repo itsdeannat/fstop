@@ -38,7 +38,7 @@ paths:
                           city: Cleveland
                           state: OH
                           zip_code: '44122'
-                          email: john.doe@example.com
+                          email: john.doe@gmail.com
                           phone_number: '+12161231234'
                           created_at: '2026-05-21T10:00:00Z'
                         created_at: '2026-05-21T10:15:00Z'
@@ -111,7 +111,7 @@ paths:
                         city: Cleveland
                         state: OH
                         zip_code: '44122'
-                        email: john.doe@example.com
+                        email: john.doe@gmail.com
                         phone_number: '+12161231234'
                         created_at: '2026-05-21T10:00:00Z'
                       created_at: '2026-05-21T10:15:00Z'
@@ -158,7 +158,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this booking.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - bookings
@@ -185,7 +185,7 @@ paths:
                         city: Cleveland
                         state: OH
                         zip_code: '44122'
-                        email: john.doe@example.com
+                        email: john.doe@gmail.com
                         phone_number: '+12161231234'
                         created_at: '2026-05-21T10:00:00Z'
                       created_at: '2026-05-21T10:15:00Z'
@@ -221,8 +221,8 @@ paths:
                   description: Booking does not exist
           description: Booking not found
     put:
-      operationId: update_booking
-      description: Update an existing booking.
+      operationId: bookings_update
+      description: Update a booking by ID.
       summary: Update a booking
       parameters:
       - in: path
@@ -230,7 +230,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this booking.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - bookings
@@ -238,13 +238,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BookingCreate'
+              $ref: '#/components/schemas/Booking'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BookingCreate'
+              $ref: '#/components/schemas/Booking'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BookingCreate'
+              $ref: '#/components/schemas/Booking'
         required: true
       security:
       - jwtAuth: []
@@ -254,72 +254,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Booking'
-              examples:
-                SuccessfulResponse:
-                  value:
-                    id: 770e8400-e29b-41d4-a716-446655440000
-                    project:
-                      id: 660e8400-e29b-41d4-a716-446655440000
-                      project_name: Wedding
-                      project_type: event
-                      client:
-                        id: 550e8400-e29b-41d4-a716-446655440000
-                        first_name: John
-                        last_name: Doe
-                        city: Cleveland
-                        state: OH
-                        zip_code: '44122'
-                        email: john.doe@example.com
-                        phone_number: '+12161231234'
-                        created_at: '2026-05-21T10:00:00Z'
-                      created_at: '2026-05-21T10:15:00Z'
-                    date: '2026-06-16'
-                    time: '15:00:00'
-                    duration: 480
-                    location: Downtown Venue - Updated
-                    created_at: '2026-05-21T10:30:00Z'
-                  summary: Successful Response
-                  description: Booking updated successfully
           description: Booking updated successfully
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
-              examples:
-                BadRequest:
-                  value:
-                    duration:
-                    - Ensure this value is greater than or equal to 0.
-                  summary: Bad Request
-                  description: Invalid booking data provided
           description: Invalid request data
         '401':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
-              examples:
-                Unauthorized:
-                  value:
-                    detail: Authentication credentials were not provided.
-                  description: Missing authentication credentials
           description: Authentication required
         '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-              examples:
-                NotFound:
-                  value:
-                    detail: Not found.
-                  summary: Not Found
-                  description: Booking does not exist
           description: Booking not found
     patch:
-      operationId: partially_update_booking
-      description: Partially update an existing booking.
+      operationId: bookings_partial_update
+      description: Partially update a booking by ID.
       summary: Partially update a booking
       parameters:
       - in: path
@@ -327,7 +283,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this booking.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - bookings
@@ -335,13 +291,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedBookingCreate'
+              $ref: '#/components/schemas/PatchedBooking'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedBookingCreate'
+              $ref: '#/components/schemas/PatchedBooking'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedBookingCreate'
+              $ref: '#/components/schemas/PatchedBooking'
       security:
       - jwtAuth: []
       responses:
@@ -350,7 +306,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Booking'
-          description: Booking partially updated successfully
+          description: Booking updated successfully
         '400':
           content:
             application/json:
@@ -379,7 +335,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this booking.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - bookings
@@ -437,7 +393,7 @@ paths:
                       city: Oxford
                       state: OH
                       zip_code: '45056'
-                      email: john.doe@example.com
+                      email: john.doe@gmail.com
                       phone_number: '+12161231234'
                       created_at: '2026-05-21T10:00:00Z'
                     - id: 550e8400-e29b-41d4-a716-446655440001
@@ -550,7 +506,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this client.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - clients
@@ -571,7 +527,7 @@ paths:
                     city: Cleveland
                     state: OH
                     zip_code: '44122'
-                    email: john.doe@example.com
+                    email: john.doe@gmail.com
                     phone_number: '+12161231234'
                     created_at: '2026-05-21T10:00:00Z'
                   summary: Successful Response
@@ -601,8 +557,8 @@ paths:
                   description: Client does not exist
           description: Client not found
     put:
-      operationId: update_client
-      description: Update an existing client.
+      operationId: clients_update
+      description: Update a client by ID.
       summary: Update a client
       parameters:
       - in: path
@@ -610,7 +566,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this client.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - clients
@@ -618,13 +574,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ClientCreate'
+              $ref: '#/components/schemas/Client'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ClientCreate'
+              $ref: '#/components/schemas/Client'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ClientCreate'
+              $ref: '#/components/schemas/Client'
         required: true
       security:
       - jwtAuth: []
@@ -634,60 +590,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Client'
-              examples:
-                SuccessfulResponse:
-                  value:
-                    id: 550e8400-e29b-41d4-a716-446655440000
-                    first_name: John
-                    last_name: Doe Updated
-                    city: Cleveland
-                    state: OH
-                    zip_code: '44122'
-                    email: john.updated@example.com
-                    phone_number: '+12161231234'
-                    created_at: '2026-05-21T10:00:00Z'
-                  summary: Successful Response
-                  description: Client updated successfully
           description: Client updated successfully
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
-              examples:
-                BadRequest:
-                  value:
-                    email:
-                    - Enter a valid email address.
-                  summary: Bad Request
-                  description: Invalid client data provided
           description: Invalid request data
         '401':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
-              examples:
-                Unauthorized:
-                  value:
-                    detail: Authentication credentials were not provided.
-                  description: Missing authentication credentials
           description: Authentication required
         '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-              examples:
-                NotFound:
-                  value:
-                    detail: Not found.
-                  summary: Not Found
-                  description: Client does not exist
           description: Client not found
     patch:
-      operationId: partially_update_client
-      description: Partially update an existing client.
+      operationId: clients_partial_update
+      description: Partially update a client by ID.
       summary: Partially update a client
       parameters:
       - in: path
@@ -695,7 +619,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this client.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - clients
@@ -703,13 +627,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedClientCreate'
+              $ref: '#/components/schemas/PatchedClient'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedClientCreate'
+              $ref: '#/components/schemas/PatchedClient'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedClientCreate'
+              $ref: '#/components/schemas/PatchedClient'
       security:
       - jwtAuth: []
       responses:
@@ -718,7 +642,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Client'
-          description: Client partially updated successfully
+          description: Client updated successfully
         '400':
           content:
             application/json:
@@ -747,7 +671,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this client.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - clients
@@ -811,7 +735,7 @@ paths:
                           city: Cleveland
                           state: OH
                           zip_code: '44122'
-                          email: john.doe@example.com
+                          email: john.doe@gmail.com
                           phone_number: '+12161231234'
                           created_at: '2026-05-21T10:00:00Z'
                         created_at: '2026-05-21T10:15:00Z'
@@ -884,7 +808,7 @@ paths:
                         city: Cleveland
                         state: OH
                         zip_code: '44122'
-                        email: john.doe@example.com
+                        email: john.doe@gmail.com
                         phone_number: '+12161231234'
                         created_at: '2026-05-21T10:00:00Z'
                       created_at: '2026-05-21T10:15:00Z'
@@ -931,7 +855,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this gallery.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - galleries
@@ -994,8 +918,8 @@ paths:
                   description: Gallery does not exist
           description: Gallery not found
     put:
-      operationId: update_gallery
-      description: Update an existing gallery.
+      operationId: galleries_update
+      description: Update a gallery by ID.
       summary: Update a gallery
       parameters:
       - in: path
@@ -1003,7 +927,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this gallery.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - galleries
@@ -1011,13 +935,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GalleryCreate'
+              $ref: '#/components/schemas/Gallery'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/GalleryCreate'
+              $ref: '#/components/schemas/Gallery'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/GalleryCreate'
+              $ref: '#/components/schemas/Gallery'
         required: true
       security:
       - jwtAuth: []
@@ -1027,72 +951,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Gallery'
-              examples:
-                SuccessfulResponse:
-                  value:
-                    id: 880e8400-e29b-41d4-a716-446655440000
-                    project:
-                      id: 660e8400-e29b-41d4-a716-446655440000
-                      project_name: Wedding
-                      project_type: event
-                      client:
-                        id: 550e8400-e29b-41d4-a716-446655440000
-                        first_name: John
-                        last_name: Doe
-                        city: Cleveland
-                        state: OH
-                        zip_code: '44122'
-                        email: john.doe@example.com
-                        phone_number: '+12161231234'
-                        created_at: '2026-05-21T10:00:00Z'
-                      created_at: '2026-05-21T10:15:00Z'
-                    gallery_name: Ceremony Photos - Updated
-                    picture_count: 125
-                    is_visible: false
-                    url: https://example.com/galleries/ceremony
-                    created_at: '2026-05-21T10:35:00Z'
-                  summary: Successful Response
-                  description: Gallery updated successfully
           description: Gallery updated successfully
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
-              examples:
-                BadRequest:
-                  value:
-                    url:
-                    - Enter a valid URL.
-                  summary: Bad Request
-                  description: Invalid gallery data provided
           description: Invalid request data
         '401':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
-              examples:
-                Unauthorized:
-                  value:
-                    detail: Authentication credentials were not provided.
-                  description: Missing authentication credentials
           description: Authentication required
         '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-              examples:
-                NotFound:
-                  value:
-                    detail: Not found.
-                  summary: Not Found
-                  description: Gallery does not exist
           description: Gallery not found
     patch:
-      operationId: partially_update_gallery
-      description: Partially update an existing gallery.
+      operationId: galleries_partial_update
+      description: Partially update a gallery by ID.
       summary: Partially update a gallery
       parameters:
       - in: path
@@ -1100,7 +980,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this gallery.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - galleries
@@ -1108,13 +988,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedGalleryCreate'
+              $ref: '#/components/schemas/PatchedGallery'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedGalleryCreate'
+              $ref: '#/components/schemas/PatchedGallery'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedGalleryCreate'
+              $ref: '#/components/schemas/PatchedGallery'
       security:
       - jwtAuth: []
       responses:
@@ -1123,7 +1003,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Gallery'
-          description: Gallery partially updated successfully
+          description: Gallery updated successfully
         '400':
           content:
             application/json:
@@ -1152,7 +1032,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this gallery.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - galleries
@@ -1214,7 +1094,7 @@ paths:
                         city: Cleveland
                         state: OH
                         zip_code: '44122'
-                        email: john.doe@example.com
+                        email: john.doe@gmail.com
                         phone_number: '+12161231234'
                         created_at: '2026-05-21T10:00:00Z'
                       created_at: '2026-05-21T10:15:00Z'
@@ -1320,7 +1200,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this project.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - projects
@@ -1345,7 +1225,7 @@ paths:
                       city: Cleveland
                       state: OH
                       zip_code: '44122'
-                      email: john.doe@example.com
+                      email: john.doe@gmail.com
                       phone_number: '+12161231234'
                       created_at: '2026-05-21T10:00:00Z'
                     created_at: '2026-05-21T10:15:00Z'
@@ -1376,8 +1256,8 @@ paths:
                   description: Project does not exist
           description: Project not found
     put:
-      operationId: update_project
-      description: Update an existing project.
+      operationId: projects_update
+      description: Update a project by ID.
       summary: Update a project
       parameters:
       - in: path
@@ -1385,7 +1265,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this project.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - projects
@@ -1393,13 +1273,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProjectCreate'
+              $ref: '#/components/schemas/Project'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ProjectCreate'
+              $ref: '#/components/schemas/Project'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ProjectCreate'
+              $ref: '#/components/schemas/Project'
         required: true
       security:
       - jwtAuth: []
@@ -1409,65 +1289,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-              examples:
-                SuccessfulResponse:
-                  value:
-                    id: 660e8400-e29b-41d4-a716-446655440000
-                    project_name: Wedding - Updated
-                    project_type: event
-                    client:
-                      id: 550e8400-e29b-41d4-a716-446655440000
-                      first_name: John
-                      last_name: Doe
-                      city: Cleveland
-                      state: OH
-                      zip_code: '44122'
-                      email: john.doe@example.com
-                      phone_number: '+12161231234'
-                      created_at: '2026-05-21T10:00:00Z'
-                    created_at: '2026-05-21T10:15:00Z'
-                  summary: Successful Response
-                  description: Project updated successfully
           description: Project updated successfully
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
-              examples:
-                BadRequest:
-                  value:
-                    project_type:
-                    - '"invalid" is not a valid choice.'
-                  summary: Bad Request
-                  description: Invalid project data provided
           description: Invalid request data
         '401':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
-              examples:
-                Unauthorized:
-                  value:
-                    detail: Authentication credentials were not provided.
-                  description: Missing authentication credentials
           description: Authentication required
         '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-              examples:
-                NotFound:
-                  value:
-                    detail: Not found.
-                  summary: Not Found
-                  description: Project does not exist
           description: Project not found
     patch:
-      operationId: partially_update_project
-      description: Partially update an existing project.
+      operationId: projects_partial_update
+      description: Partially update a project by ID.
       summary: Partially update a project
       parameters:
       - in: path
@@ -1475,7 +1318,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this project.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - projects
@@ -1483,13 +1326,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedProjectCreate'
+              $ref: '#/components/schemas/PatchedProject'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedProjectCreate'
+              $ref: '#/components/schemas/PatchedProject'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedProjectCreate'
+              $ref: '#/components/schemas/PatchedProject'
       security:
       - jwtAuth: []
       responses:
@@ -1498,7 +1341,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-          description: Project partially updated successfully
+          description: Project updated successfully
         '400':
           content:
             application/json:
@@ -1527,7 +1370,7 @@ paths:
         schema:
           type: string
           format: uuid
-        description: A UUID string identifying this project.
+        description: Unique identifier of the resource.
         required: true
       tags:
       - projects
@@ -1578,6 +1421,8 @@ paths:
             schema:
               $ref: '#/components/schemas/TokenObtainPair'
         required: true
+      security:
+      - {}
       responses:
         '200':
           content:
@@ -1615,6 +1460,8 @@ paths:
             schema:
               $ref: '#/components/schemas/TokenRefresh'
         required: true
+      security:
+      - {}
       responses:
         '200':
           content:
@@ -1815,16 +1662,16 @@ components:
           format: uuid
           readOnly: true
           description: Unique identifier for the gallery
-        booking:
+        project:
           allOf:
-          - $ref: '#/components/schemas/Booking'
+          - $ref: '#/components/schemas/Project'
           readOnly: true
-          description: Booking associated with this gallery
-        booking_id:
+          description: Project associated with this gallery
+        project_id:
           type: string
           format: uuid
           writeOnly: true
-          description: UUID of the booking for this gallery
+          description: UUID of the project for this gallery
         gallery_name:
           type: string
           description: Name of the gallery
@@ -1845,13 +1692,13 @@ components:
           readOnly: true
           description: Timestamp when gallery was created
       required:
-      - booking
-      - booking_id
       - created_at
       - gallery_name
       - id
       - is_visible
       - picture_count
+      - project
+      - project_id
       - url
     GalleryCreate:
       type: object
@@ -1889,15 +1736,24 @@ components:
         detail:
           type: string
           default: The requested resource was not found.
-    PatchedBookingCreate:
+    PatchedBooking:
       type: object
-      description: Serializer for creating bookings - excludes read-only fields (id,
-        project, created_at)
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier for the booking
         project_id:
           type: string
           format: uuid
+          writeOnly: true
           description: UUID of the project for this booking
+        project:
+          allOf:
+          - $ref: '#/components/schemas/Project'
+          readOnly: true
+          description: Project associated with this booking
         date:
           type: string
           format: date
@@ -1913,11 +1769,19 @@ components:
           type: string
           description: Booking location
           maxLength: 20
-    PatchedClientCreate:
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the booking was created
+    PatchedClient:
       type: object
-      description: Serializer for creating clients - excludes read-only fields (id,
-        created_at)
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier for the client
         first_name:
           type: string
           description: Client's first name
@@ -1945,14 +1809,28 @@ components:
         phone_number:
           type: string
           description: Client's phone number
-    PatchedGalleryCreate:
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when client was created
+    PatchedGallery:
       type: object
-      description: Serializer for creating galleries - excludes read-only fields (id,
-        project, created_at)
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier for the gallery
+        project:
+          allOf:
+          - $ref: '#/components/schemas/Project'
+          readOnly: true
+          description: Project associated with this gallery
         project_id:
           type: string
           format: uuid
+          writeOnly: true
           description: UUID of the project for this gallery
         gallery_name:
           type: string
@@ -1968,11 +1846,19 @@ components:
           type: string
           format: uri
           description: URL link to the gallery
-    PatchedProjectCreate:
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when gallery was created
+    PatchedProject:
       type: object
-      description: Serializer for creating projects - excludes read-only fields (id,
-        client, created_at)
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier for the project
         project_name:
           type: string
           description: Name of the project
@@ -1986,10 +1872,21 @@ components:
             * `event` - event
             * `portrait` - portrait
             * `party` - party
+        client:
+          allOf:
+          - $ref: '#/components/schemas/Client'
+          readOnly: true
+          description: Details of the client associated with this project
         client_id:
           type: string
           format: uuid
+          writeOnly: true
           description: UUID of the client for this project
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the project was created
     Project:
       type: object
       properties:
@@ -2097,7 +1994,6 @@ components:
           readOnly: true
         refresh:
           type: string
-          writeOnly: true
       required:
       - access
       - refresh
@@ -2115,4 +2011,4 @@ components:
       bearerFormat: JWT
 servers:
 - url: https://fstop.photo
-  description: Production server
+  description: Fstop Production server
