@@ -1,9 +1,10 @@
 name: Publish API Artifacts
+
 on:
-  workflow_run:
-    workflows: ["Deploy to Railway"]
-    types: 
-      - completed
+  push:
+    branches: ["main"]
+    paths:
+      - "schema.yml"
 
 
   workflow_dispatch:
@@ -19,7 +20,6 @@ permissions:
 
 jobs:
   update-sdk:
-    if: ${{ !inputs.skip_sdk }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out API repo
