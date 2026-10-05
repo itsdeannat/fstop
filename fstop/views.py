@@ -9,6 +9,7 @@ from .models import Client, Project, Booking, Gallery
 from .serializers import (
     ClientSerializer,
     ClientCreateSerializer,
+    ClientListQuerySerializer,
     ProjectSerializer,
     ProjectCreateSerializer,
     BookingSerializer,
@@ -89,7 +90,14 @@ class ClientViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         """Only return clients owned by the requesting user"""
-        return Client.objects.filter(user=self.request.user)
+        queryset = Client.objects.filter(user=self.request.user)
+        if self.action == "list":
+            query_serializer = ClientListQuerySerializer(data=self.request.query_params)
+            query_serializer.is_valid(raise_exception=True)
+            limit = query_serializer.validated_data.get("limit")
+            if limit is not None:
+                queryset = queryset[:limit]
+        return queryset
     
     def perform_create(self, serializer):
         """Auto-assign the owner when creating a new client"""
@@ -98,7 +106,16 @@ class ClientViewSet(viewsets.ModelViewSet):
     @extend_schema(
         operation_id="list_clients",
         summary="List all clients",
-        description="Retrieve a list of all clients in the system.",
+        description="Retrieve a list of all clients in the system. Optionally limit the number of results returned.",
+        parameters=[
+            OpenApiParameter(
+                name="limit",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description="Maximum number of clients to return. Must be a non-negative integer.",
+            ),
+        ],
         responses={
             200: OpenApiResponse(response=ClientSerializer(many=True), description="List of clients retrieved successfully"),
             401: OpenApiResponse(response=UnauthorizedSerializer, description="Authentication required"),

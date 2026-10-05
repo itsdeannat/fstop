@@ -4,6 +4,10 @@ from .models import Client, Project, Booking, Gallery
 from django.contrib.auth.models import User
 
 
+class ClientListQuerySerializer(serializers.Serializer):
+    limit = serializers.IntegerField(required=False, min_value=0)
+
+
 class ClientSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True, help_text="Unique identifier for the client")
     first_name = serializers.CharField(max_length=20, help_text="Client's first name")
