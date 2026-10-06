@@ -548,7 +548,7 @@ paths:
               examples:
                 Unauthorized:
                   value:
-                    detail: Authentication credentials were not provided.
+                    detail: Authentication credentials weren't provided.
                   description: Missing authentication credentials
           description: Authentication required
         '404':
