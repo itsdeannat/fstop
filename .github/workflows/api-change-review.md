@@ -13,7 +13,6 @@ permissions:
   issues: read
   pull-requests: read
 engine: copilot
-model: gpt-5-mini
 strict: true
 tools:
   github:
