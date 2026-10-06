@@ -181,6 +181,12 @@ class GalleryCreationTests(FstopTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(Gallery.objects.filter(project=project).exists())
 
+        gallery = Gallery.objects.get(project=project)
+        response = self.client.get(f'/api/galleries/{gallery.id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotIn('created_at', response.data)
+
 class HealthTests(FstopTestCase):
     """
     Contains a method that tests the API's health

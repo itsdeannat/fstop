@@ -128,11 +128,10 @@ class GallerySerializer(serializers.ModelSerializer):
     picture_count = serializers.IntegerField(help_text="Number of pictures in the gallery")
     is_visible = serializers.BooleanField(help_text="Whether the gallery is publicly visible")
     url = serializers.URLField(help_text="URL link to the gallery")
-    created_at = serializers.DateTimeField(read_only=True, help_text="Timestamp when gallery was created")
     
     class Meta:
         model = Gallery
-        fields = ['id', 'project', 'project_id', 'gallery_name', 'picture_count', 'is_visible', 'url', 'created_at']
+        fields = ['id', 'project', 'project_id', 'gallery_name', 'picture_count', 'is_visible', 'url']
 
 
 class GalleryCreateSerializer(serializers.ModelSerializer):
