@@ -378,7 +378,8 @@ paths:
         name: limit
         schema:
           type: integer
-        description: Maximum number of clients to return. Must be a non-negative integer.
+        description: The maximum number of clients to return. Must be a non-negative
+          integer.
       tags:
       - clients
       security:

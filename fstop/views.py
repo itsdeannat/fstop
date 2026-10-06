@@ -113,7 +113,7 @@ class ClientViewSet(viewsets.ModelViewSet):
                 type=OpenApiTypes.INT,
                 location=OpenApiParameter.QUERY,
                 required=False,
-                description="Maximum number of clients to return. Must be a non-negative integer.",
+                description="The maximum number of clients to return. Must be a non-negative integer.",
             ),
         ],
         responses={
