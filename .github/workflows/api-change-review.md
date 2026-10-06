@@ -12,6 +12,7 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
+engine: copilot
 strict: true
 tools:
   github:
