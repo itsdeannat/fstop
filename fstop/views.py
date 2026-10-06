@@ -591,7 +591,7 @@ class BookingViewSet(viewsets.ModelViewSet):
             OpenApiExample(
                 name="Unauthorized",
                 description="Missing authentication credentials",
-                value={"detail": "Authentication credentials were not provided."},
+                value={"detail": "Authentication credentials weren't provided."},
                 response_only=True,
                 status_codes=["401"],
             ),
