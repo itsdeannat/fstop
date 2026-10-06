@@ -179,6 +179,7 @@ class GalleryCreationTests(FstopTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertNotIn('created_at', response.data)
         self.assertTrue(Gallery.objects.filter(project=project).exists())
 
 class HealthTests(FstopTestCase):
