@@ -1,10 +1,8 @@
 name: Deploy to Railway
 
 on:
-  workflow_run:
-    workflows: ["Validate API"]
-    types:
-        - completed
+  push:
+    branches: ["main"]
 
 jobs:
   deploy:
