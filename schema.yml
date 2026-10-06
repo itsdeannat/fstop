@@ -370,8 +370,15 @@ paths:
   /api/clients/:
     get:
       operationId: list_clients
-      description: Retrieve a list of all clients in the system.
+      description: Retrieve a list of all clients in the system. Optionally limit
+        the number of results returned.
       summary: List all clients
+      parameters:
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: Maximum number of clients to return. Must be a non-negative integer.
       tags:
       - clients
       security:

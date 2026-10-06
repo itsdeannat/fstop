@@ -72,6 +72,39 @@ class AuthenticationRequiredTests(FstopTestCase):
             status.HTTP_401_UNAUTHORIZED
         )
 
+class ClientListLimitTests(FstopTestCase):
+    def setUp(self):
+        super().setUp()
+        for index in range(3):
+            Client.objects.create(
+                user=self.user,
+                first_name=f'Client{index}',
+                last_name='Doe',
+                city='Cleveland',
+                state='OH',
+                zip_code='44122',
+                email=f'client{index}@example.com',
+                phone_number='+12161234567'
+            )
+        self.client.force_authenticate(user=self.user)
+
+    def test_limit_query_parameter_limits_results(self):
+        response = self.client.get('/api/clients/?limit=2')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_omitted_limit_returns_all_owned_clients(self):
+        response = self.client.get('/api/clients/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+    def test_non_integer_limit_returns_bad_request(self):
+        response = self.client.get('/api/clients/?limit=invalid')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
 class AuthorizationTests(FstopTestCase):
     """
