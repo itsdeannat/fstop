@@ -27,19 +27,13 @@ steps:
       MERGE_SHA: ${{ github.sha }}
     run: |
       set -euo pipefail
-      mkdir -p /tmp/gh-aw/agent/api-schema-diff output
+      mkdir -p /tmp/gh-aw/agent/api-schema-diff 
       git show "${MERGE_SHA}:schema.yml" > /tmp/gh-aw/agent/api-schema-diff/merge-commit-schema.yml
       gh api "repos/${GITHUB_REPOSITORY}/contents/schema.yml?ref=main" --jq '.content' | base64 --decode > /tmp/gh-aw/agent/api-schema-diff/main-schema.yml
-      cp /tmp/gh-aw/agent/api-schema-diff/merge-commit-schema.yml output/schema.yml
 safe-outputs:
   add-comment:
     target: triggering
     max: 1
-  upload-artifact:
-    max-uploads: 1
-    retention-days: 14
-    allowed-paths:
-      - output/schema.yml
 ---
 
 # API Change Review
@@ -110,12 +104,8 @@ documentation review.
 
 If there are no meaningful API contract changes, say so clearly.
 
-Always upload `output/schema.yml` with the `upload_artifact` safe output using the artifact name `schema-yml`. This is the schema from the PR merge ref, not the `main` baseline.
-
-Keep comparison inputs and artifact contents separate.
-
 Do not edit repository documentation or other source files.
 
-Use the configured `add-comment` and `upload-artifact` safe outputs for the requested results. Do not make direct GitHub writes.
+Use the configured `add-comment` safe output for the requested result. Do not make direct GitHub writes.
 
 If the evidence is incomplete, do not publish a speculative compatibility assessment.
