@@ -12,8 +12,6 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
-engine: copilot
-model: auto
 strict: true
 tools:
   github:
