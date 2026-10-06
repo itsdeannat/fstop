@@ -19,7 +19,7 @@ tools:
     toolsets: [default]
 engine:
   id: copilot
-  model: gpt-4
+  model: gpt-5.4
 steps:
   - name: Prepare merge and main schemas
     env:
