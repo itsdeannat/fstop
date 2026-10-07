@@ -57,9 +57,9 @@ The Fstop API is a work in progress.
 | API reference documentation | ✅ Available         |
 | Python SDK                  | ✅ Generated         |
 | SDK examples                | ⚠️ Not fully tested |
-| Automated API tests         | 🚧 Future work      |
+| Automated API tests         | 🚧 In progress       |
 | Test data / fixtures        | 🚧 Future work      |
-| Public deployment           | 🚧 Future work      |
+| Public deployment           | ✅ Available       |
 
 
 ## About Beyond the Docs
