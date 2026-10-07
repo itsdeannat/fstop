@@ -743,7 +743,6 @@ paths:
                       picture_count: 125
                       is_visible: true
                       url: https://example.com/galleries/ceremony
-                      created_at: '2026-05-21T10:35:00Z'
                   summary: Successful Response
                   description: List of galleries
           description: List of galleries retrieved successfully
@@ -816,7 +815,6 @@ paths:
                     picture_count: 89
                     is_visible: true
                     url: https://example.com/galleries/reception
-                    created_at: '2026-05-21T10:35:00Z'
                   summary: Successful Response
                   description: Gallery created successfully
           description: Gallery created successfully
@@ -890,7 +888,6 @@ paths:
                     picture_count: 125
                     is_visible: true
                     url: https://example.com/galleries/ceremony
-                    created_at: '2026-05-21T10:35:00Z'
                   summary: Successful Response
                   description: Single gallery details
           description: Gallery retrieved successfully
@@ -1686,13 +1683,7 @@ components:
           type: string
           format: uri
           description: URL link to the gallery
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-          description: Timestamp when gallery was created
       required:
-      - created_at
       - gallery_name
       - id
       - is_visible
@@ -1846,11 +1837,6 @@ components:
           type: string
           format: uri
           description: URL link to the gallery
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-          description: Timestamp when gallery was created
     PatchedProject:
       type: object
       properties:
